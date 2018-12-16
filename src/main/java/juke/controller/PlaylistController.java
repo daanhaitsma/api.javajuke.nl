@@ -42,14 +42,14 @@ public class PlaylistController {
             throw new IllegalArgumentException();
         }
 
-        long track_id = Long.parseLong(body.get("track_id"));
-        long playlist_id = Long.parseLong(id);
-        if (!trackRepository.exists(track_id) || !playlistRepository.exists(playlist_id)) {
+        long trackId = Long.parseLong(body.get("track_id"));
+        long playlistId = Long.parseLong(id);
+        if (!trackRepository.exists(trackId) || !playlistRepository.exists(playlistId)) {
             throw new IllegalArgumentException();
         }
 
-        Track track = trackRepository.getOne(track_id);
-        Playlist playlist = playlistRepository.getOne(playlist_id);
+        Track track = trackRepository.getOne(trackId);
+        Playlist playlist = playlistRepository.getOne(playlistId);
 
         if (playlist.getTracks().contains(track)) {
             throw new EntityExistsException();
@@ -66,14 +66,14 @@ public class PlaylistController {
             throw new IllegalArgumentException();
         }
 
-        long track_id = Long.parseLong(body.get("track_id"));
-        long playlist_id = Long.parseLong(id);
-        if (!trackRepository.exists(track_id) || !playlistRepository.exists(playlist_id)) {
+        long trackId = Long.parseLong(body.get("track_id"));
+        long playlistId = Long.parseLong(id);
+        if (!trackRepository.exists(trackId) || !playlistRepository.exists(playlistId)) {
             throw new IllegalArgumentException();
         }
 
-        Track track = trackRepository.getOne(track_id);
-        Playlist playlist = playlistRepository.getOne(playlist_id);
+        Track track = trackRepository.getOne(trackId);
+        Playlist playlist = playlistRepository.getOne(playlistId);
 
         if (!playlist.getTracks().contains(track)) {
             throw new EntityExistsException();
