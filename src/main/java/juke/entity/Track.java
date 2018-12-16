@@ -24,6 +24,8 @@ public class Track {
             mappedBy = "tracks")
     private Set<Playlist> playlists = new HashSet<>();
 
+    public Track() {}
+
     public Track(String path) {
         this.path = path;
     }

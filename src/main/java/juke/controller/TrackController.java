@@ -8,9 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activity.InvalidActivityException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.List;
 
 @CrossOrigin
@@ -55,5 +57,24 @@ public class TrackController {
         Track track = new Track(filePath);
 
         return trackRepository.save(track);
+    }
+
+    @RequestMapping(value = "/api/tracks/remove/{id}", method = RequestMethod.GET, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<Track> remove(@PathVariable String id) throws Exception {
+        long trackId = Long.parseLong(id);
+
+        Track track = trackRepository.findOne(trackId);
+
+        String filePath = track.getPath();
+
+        File file = new File(filePath);
+
+        if(!file.delete()) {
+            throw new Exception();
+        }
+
+        trackRepository.delete(track);
+
+        return trackRepository.findAll();
     }
 }
