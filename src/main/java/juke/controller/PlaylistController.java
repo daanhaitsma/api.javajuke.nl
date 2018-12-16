@@ -37,7 +37,7 @@ public class PlaylistController {
     }
 
     @RequestMapping(value = "api/playlists/{id}/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Playlist addSong(@PathVariable String id, @RequestParam Map<String, String> body) throws Exception {
+    public Playlist addTrack(@PathVariable String id, @RequestParam Map<String, String> body) {
         if (body.get("track_id") == null || !StringUtils.isNumeric(body.get("track_id"))) {
             throw new IllegalArgumentException();
         }
@@ -56,6 +56,30 @@ public class PlaylistController {
         }
 
         playlist.getTracks().add(track);
+
+        return playlistRepository.save(playlist);
+    }
+
+    @RequestMapping(value = "api/playlists/{id}/remove", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public Playlist removeTrack(@PathVariable String id, @RequestParam Map<String, String> body) {
+        if (body.get("track_id") == null || !StringUtils.isNumeric(body.get("track_id"))) {
+            throw new IllegalArgumentException();
+        }
+
+        long track_id = Long.parseLong(body.get("track_id"));
+        long playlist_id = Long.parseLong(id);
+        if (!trackRepository.exists(track_id) || !playlistRepository.exists(playlist_id)) {
+            throw new IllegalArgumentException();
+        }
+
+        Track track = trackRepository.getOne(track_id);
+        Playlist playlist = playlistRepository.getOne(playlist_id);
+
+        if (!playlist.getTracks().contains(track)) {
+            throw new EntityExistsException();
+        }
+
+        playlist.getTracks().remove(track);
 
         return playlistRepository.save(playlist);
     }
