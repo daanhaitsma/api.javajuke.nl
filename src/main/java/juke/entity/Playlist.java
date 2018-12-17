@@ -31,6 +31,12 @@ public class Playlist {
             })
     private Set<Track> tracks = new HashSet<>();
 
+    public Playlist() {}
+
+    public Playlist(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
