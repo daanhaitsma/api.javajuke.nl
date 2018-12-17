@@ -70,7 +70,7 @@ public class PlaylistController {
         playlistRepository.delete(playlistId);
     }
 
-    @RequestMapping(value = "api/playlists/{id}/tracks/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "api/playlists/{id}/tracks", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Playlist addTrack(@PathVariable String id, @RequestParam Map<String, String> body) {
         if (body.get("track_id") == null || !StringUtils.isNumeric(body.get("track_id"))) {
             throw new IllegalArgumentException();
@@ -94,7 +94,7 @@ public class PlaylistController {
         return playlistRepository.save(playlist);
     }
 
-    @RequestMapping(value = "api/playlists/{id}/tracks/remove", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "api/playlists/{id}/tracks", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Playlist removeTrack(@PathVariable String id, @RequestParam Map<String, String> body) {
         if (body.get("track_id") == null || !StringUtils.isNumeric(body.get("track_id"))) {
             throw new IllegalArgumentException();

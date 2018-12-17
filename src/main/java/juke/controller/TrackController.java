@@ -8,11 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activity.InvalidActivityException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.List;
 
 @CrossOrigin
@@ -41,7 +39,7 @@ public class TrackController {
         return trackRepository.findOne(trackId);
     }
 
-    @RequestMapping(value = "/api/tracks/add", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/api/tracks", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Track add(@RequestParam("file") MultipartFile file) throws IOException {
         if(!new File(uploadDirectory).exists())
         {
@@ -59,7 +57,7 @@ public class TrackController {
         return trackRepository.save(track);
     }
 
-    @RequestMapping(value = "/api/tracks/remove/{id}", method = RequestMethod.GET, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/api/tracks/{id}", method = RequestMethod.DELETE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<Track> remove(@PathVariable String id) throws Exception {
         long trackId = Long.parseLong(id);
 
