@@ -83,6 +83,28 @@ INSERT INTO `track` (`id`, `path`) VALUES
 (9, 'example/path/9'),
 (10, 'example/path/10');
 
+
+---------------------------------------------------------------------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`) VALUES
+(1, 'Niels', 'Schutte'),
+(2, 'Daan', 'Botter'),
+(3, 'Tom', 'Van Wijgerden');
+
 --
 -- Indexen voor geëxporteerde tabellen
 --
@@ -105,6 +127,12 @@ ALTER TABLE `playlist_track`
 -- Indexen voor tabel `track`
 --
 ALTER TABLE `track`
+ADD PRIMARY KEY (`id`);
+
+  --
+-- Indexen voor tabel `users`
+--
+ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -121,6 +149,12 @@ ALTER TABLE `playlist`
 -- AUTO_INCREMENT voor een tabel `track`
 --
 ALTER TABLE `track`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT voor een tabel `track`
+--
+ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
