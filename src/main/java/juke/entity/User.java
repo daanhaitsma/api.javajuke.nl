@@ -15,6 +15,8 @@ public class User {
     private long id;
     private String first_name;
     private String last_name;
+    private String email;
+    private String password;
     @JsonManagedReference
     @ManyToMany(
             fetch = FetchType.LAZY,
@@ -26,9 +28,11 @@ public class User {
 
     public User() {}
 
-    public User(String first_name, String last_name) {
+    public User(String first_name, String last_name, String email, String password) {
         this.first_name = first_name;
         this.last_name = last_name;
+        this.email = email;
+        this.password = password;
     }
 
     public long getId() {
@@ -55,11 +59,31 @@ public class User {
         this.last_name = last_name;
     }
 
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
     public Set<User> getUsers() {
         return users;
     }
 
-    public void setTracks(Set<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

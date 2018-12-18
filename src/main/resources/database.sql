@@ -93,17 +93,19 @@ INSERT INTO `track` (`id`, `path`) VALUES
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`) VALUES
-(1, 'Niels', 'Schutte'),
-(2, 'Daan', 'Botter'),
-(3, 'Tom', 'Van Wijgerden');
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`) VALUES
+(1, 'Niels', 'Schutte', 'niels-schutte@hotmail.com', 'password'),
+(2, 'Daan', 'Botter', 'daantje.boter@student.stenden.com', 'password'),
+(3, 'Tom', 'Van Wijgerden', 'tommo@student.stenden.com', 'password');
 
 --
 -- Indexen voor geëxporteerde tabellen
