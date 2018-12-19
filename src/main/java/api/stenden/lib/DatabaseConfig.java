@@ -30,7 +30,7 @@ import java.util.Properties;
 public class DatabaseConfig {
 
     private final String DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
-    private final String URL = "jdbc:mysql://localhost:3306/juke";
+    private final String URL = "jdbc:mysql://localhost:3306/javajuke?useLegacyDatetimeCode=false&serverTimezone=UTC";
     private final String USERNAME = "root";
     private final String PASSWORD = "";
 
@@ -39,10 +39,10 @@ public class DatabaseConfig {
     public DataSource dataSource()
     {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.addConnectionProperty("driverClassName", DRIVER_CLASS_NAME);
-        dataSource.addConnectionProperty("url", URL);
-        dataSource.addConnectionProperty("username", USERNAME);
-        dataSource.addConnectionProperty("password", PASSWORD);
+        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
+        dataSource.setUrl(URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
         return dataSource;
     }
 
