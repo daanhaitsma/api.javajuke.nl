@@ -1,4 +1,4 @@
-package juke.entity;
+package api.stenden.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

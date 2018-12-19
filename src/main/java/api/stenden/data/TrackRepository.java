@@ -1,10 +1,7 @@
-package juke.repository;
+package api.stenden.data;
 
-import juke.entity.Track;
+import api.stenden.data.model.Track;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface TrackRepository extends JpaRepository<Track, Long> {
-
 }
