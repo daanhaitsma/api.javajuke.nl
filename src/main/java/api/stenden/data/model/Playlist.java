@@ -29,6 +29,7 @@ public class Playlist {
             inverseJoinColumns = {
                 @JoinColumn(name = "track_id")
             })
+    @OrderBy("id ASC")
     private Set<Track> tracks = new HashSet<>();
 
     public Playlist() {}
