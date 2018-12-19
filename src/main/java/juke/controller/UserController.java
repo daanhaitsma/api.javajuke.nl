@@ -1,27 +1,23 @@
 package juke.controller;
 
-import juke.entity.Playlist;
-import juke.entity.Track;
 import juke.repository.UserRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import juke.entity.User;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
 @RestController
 
-public class RegisterController {
+public class UserController {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public RegisterController(UserRepository UserRepository) {
+    public UserController(UserRepository UserRepository) {
         this.userRepository = UserRepository;
     }
 
@@ -35,7 +31,7 @@ public class RegisterController {
         if (body.get("first_name")  == null || body.get("last_name")  == null) {
             throw new IllegalArgumentException();
         }
-        User user = new User(body.get("first_name"), body.get("last_name"));
+        User user = new User(body.get("first_name"), body.get("last_name"), body.get("email"), body.get("password"));
 
         return userRepository.save(user);
     }
@@ -48,7 +44,7 @@ public class RegisterController {
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public User update(@PathVariable String id, @RequestParam Map<String, String> body){
-        if (body.get("first_name") == null || body.get("last_name") == null) {
+        if (body.get("first_name") == null || body.get("last_name") == null || body.get("email") == null || body.get("password") == null) {
             throw new IllegalArgumentException();
         }
 
@@ -57,6 +53,8 @@ public class RegisterController {
         User user = userRepository.findOne(userId);
         user.setFirstName(body.get("first_name"));
         user.setLastName(body.get("last_name"));
+        user.setFirstName(body.get("email"));
+        user.setLastName(body.get("password"));
 
         return userRepository.save(user);
     }
