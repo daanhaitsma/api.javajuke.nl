@@ -31,4 +31,11 @@ public class PlaylistService {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
     }
+
+    public void deletePlaylist(long id) {
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+
+        playlistRepository.delete(playlist);
+    }
 }
