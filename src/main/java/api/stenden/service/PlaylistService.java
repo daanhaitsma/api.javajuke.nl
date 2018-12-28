@@ -21,6 +21,12 @@ public class PlaylistService {
         return playlistRepository.findAll();
     }
 
+    public Playlist createPlaylist(String name) {
+        Playlist playlist = new Playlist(name);
+
+        return playlistRepository.save(playlist);
+    }
+
     public Playlist getPlaylist(long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));

@@ -21,12 +21,19 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists")
-    public List<Playlist> index() {
+    public List<Playlist> show() {
         return playlistService.getPlaylists();
     }
 
+    @PostMapping(value = "/playlists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public Playlist create(@RequestParam Map<String, String> body) {
+        String name = body.get("name");
+
+        return playlistService.createPlaylist(name);
+    }
+
     @GetMapping("/playlists/{id}")
-    public Playlist index(@PathVariable("id") long id) throws EntityNotFoundException {
+    public Playlist show(@PathVariable("id") long id) throws EntityNotFoundException {
         return playlistService.getPlaylist(id);
     }
 
