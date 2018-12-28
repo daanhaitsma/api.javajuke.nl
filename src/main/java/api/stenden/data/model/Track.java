@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 public class Track {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String path;
     @JsonBackReference

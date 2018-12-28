@@ -65,11 +65,6 @@ public class DatabaseConfig {
 //        return transactionManager;
 //    }
 
-    /**
-     * Whhn just using JPA, you could also use this transaction manager.
-     *
-     * @return
-     */
     @Bean
     public PlatformTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
