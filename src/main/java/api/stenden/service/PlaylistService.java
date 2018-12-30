@@ -13,9 +13,11 @@ import java.util.List;
 public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
+    private final TrackService trackService;
 
-    public PlaylistService(PlaylistRepository playlistRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
         this.playlistRepository = playlistRepository;
+        this.trackService = trackService;
     }
 
     public List<Playlist> getPlaylists() {
@@ -48,5 +50,23 @@ public class PlaylistService {
         Playlist playlist = getPlaylist(id);
 
         playlistRepository.delete(playlist);
+    }
+
+    public Playlist addTrackToPlaylist(long id, long trackId) {
+        Track track = trackService.getTrack(trackId);
+
+        Playlist playlist = getPlaylist(id);
+        playlist.getTracks().add(track);
+
+        return playlistRepository.save(playlist);
+    }
+
+    public Playlist removeTrackFromPlaylist(long id, long trackId) {
+        Track track = trackService.getTrack(trackId);
+
+        Playlist playlist = getPlaylist(id);
+        playlist.getTracks().remove(track);
+
+        return playlistRepository.save(playlist);
     }
 }

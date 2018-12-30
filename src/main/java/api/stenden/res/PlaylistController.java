@@ -50,4 +50,14 @@ public class PlaylistController {
     public void delete(@PathVariable("id") long id) throws EntityNotFoundException {
         playlistService.deletePlaylist(id);
     }
+
+    @PostMapping(value = "/playlists/{id}/tracks/{trackId}")
+    public Playlist addTrackToPlaylist(@PathVariable long id, @PathVariable long trackId) {
+        return playlistService.addTrackToPlaylist(id, trackId);
+    }
+
+    @DeleteMapping(value = "/playlists/{id}/tracks/{trackId}")
+    public Playlist removeTrackFromPlaylist(@PathVariable long id, @PathVariable long trackId) {
+        return playlistService.removeTrackFromPlaylist(id, trackId);
+    }
 }
