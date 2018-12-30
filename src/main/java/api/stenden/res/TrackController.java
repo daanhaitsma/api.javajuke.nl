@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.attribute.standard.Media;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -39,5 +40,10 @@ public class TrackController {
     @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Track create(@RequestParam("file") MultipartFile file) throws IOException {
         return trackService.createTrack(file);
+    }
+
+    @DeleteMapping(value = "/tracks/{id}")
+    public void create(@PathVariable("id") long id) throws FileNotFoundException {
+        trackService.deleteTrack(id);
     }
 }

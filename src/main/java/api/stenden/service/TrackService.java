@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -47,5 +48,19 @@ public class TrackService {
         Track track = new Track(filePath);
 
         return trackRepository.save(track);
+    }
+
+    public void deleteTrack(long id) throws FileNotFoundException {
+        Track track = getTrack(id);
+
+        String filePath = track.getPath();
+
+        File file = new File(filePath);
+
+        if (!file.delete()) {
+            throw new FileNotFoundException();
+        }
+
+        trackRepository.delete(track);
     }
 }
