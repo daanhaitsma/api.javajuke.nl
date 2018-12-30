@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class TrackController {
         return trackService.getTrack(id);
     }
 
-    @RequestMapping(value = "/tracks", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Track create(@RequestParam("file") MultipartFile file) throws IOException {
         return trackService.createTrack(file);
     }
