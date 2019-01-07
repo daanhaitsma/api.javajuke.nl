@@ -13,7 +13,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String path;
+    private String token;
+    private String name;
     @JsonBackReference
     @OneToMany(
             mappedBy = "user",
@@ -23,10 +24,6 @@ public class User {
 
     public User() {}
 
-    public User(String path) {
-        this.path = path;
-    }
-
     public long getId() {
         return id;
     }
@@ -35,19 +32,23 @@ public class User {
         this.id = id;
     }
 
-    public String getPath() {
-        return path;
+    public String getToken() {
+        return token;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<Playlist> getPlaylists() {
         return playlists;
-    }
-
-    public void setPlaylists(Set<Playlist> playlists) {
-        this.playlists = playlists;
     }
 }

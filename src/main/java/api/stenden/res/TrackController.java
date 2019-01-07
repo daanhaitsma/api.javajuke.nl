@@ -1,6 +1,7 @@
 package api.stenden.res;
 
 import api.stenden.data.model.Track;
+import api.stenden.data.model.User;
 import api.stenden.exception.EntityNotFoundException;
 import api.stenden.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
