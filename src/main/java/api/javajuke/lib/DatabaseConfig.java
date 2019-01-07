@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement // Required for Hibernate
 @EnableJpaRepositories("api.javajuke.data")
-@PropertySource("classpath:database.properties")
+@PropertySource("classpath:application.properties")
 @NoArgsConstructor
 public class DatabaseConfig {
 

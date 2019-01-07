@@ -38,4 +38,4 @@ test-output
 atlassian-ide-plugin.xml
 .gradletasknamecache
 
-src/main/resources/database.properties
+src/main/resources/application.properties
