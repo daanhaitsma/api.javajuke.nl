@@ -4,9 +4,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -18,6 +20,8 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -26,23 +30,22 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement // Required for Hibernate
 @EnableJpaRepositories("api.stenden.data")
+@PropertySource("classpath:database.properties")
 @NoArgsConstructor
 public class DatabaseConfig {
 
-    private final String DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
-    private final String URL = "jdbc:mysql://localhost:3306/javajuke?useLegacyDatetimeCode=false&serverTimezone=UTC";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "";
+    @Autowired
+    private Environment env;
 
 
     @Bean
     public DataSource dataSource()
     {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
-        dataSource.setUrl(URL);
-        dataSource.setUsername(USERNAME);
-        dataSource.setPassword(PASSWORD);
+        dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(env.getProperty("spring.datasource.url"));
+        dataSource.setUsername(env.getProperty("spring.datasource.username"));
+        dataSource.setPassword(env.getProperty("spring.datasource.password"));
         return dataSource;
     }
 
