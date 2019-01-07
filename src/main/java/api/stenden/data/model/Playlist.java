@@ -32,6 +32,10 @@ public class Playlist {
     @OrderBy("id ASC")
     private Set<Track> tracks = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Playlist() {}
 
     public Playlist(String name) {
@@ -60,5 +64,13 @@ public class Playlist {
 
     public void setTracks(Set<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
