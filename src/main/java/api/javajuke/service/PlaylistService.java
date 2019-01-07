@@ -7,6 +7,7 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -62,10 +63,20 @@ public class PlaylistService {
     }
 
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
-        Track track = trackService.getTrack(trackId);
-
         Playlist playlist = getPlaylist(id);
-        playlist.getTracks().remove(track);
+
+        // Iterate over all the tracks
+        Iterator<Track> trackIterator = playlist.getTracks().iterator();
+        Boolean trackFound = false;
+        while (trackIterator.hasNext() && !trackFound) {
+            Track track = trackIterator.next();
+            // If the track to be deleted is found, actually delete it
+            if (track.getId() == trackId) {
+                trackIterator.remove();
+                // Stop when the track is found, so as to not keep iterating unnecessarily
+                trackFound = true;
+            }
+        }
 
         return playlistRepository.save(playlist);
     }
