@@ -3,6 +3,8 @@ package api.stenden.res;
 import api.stenden.data.model.Track;
 import api.stenden.exception.EntityNotFoundException;
 import api.stenden.service.TrackService;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -38,7 +40,7 @@ public class TrackController {
     }
 
     @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Track create(@RequestParam("file") MultipartFile file) throws IOException {
+    public Track create(@RequestParam("file") MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
         return trackService.createTrack(file);
     }
 

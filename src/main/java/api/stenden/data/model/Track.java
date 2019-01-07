@@ -2,6 +2,7 @@ package api.stenden.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,9 +15,12 @@ public class Track {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String path;
+    @Nullable
     private String title;
+    @Nullable
     private String artist;
     private long duration;
+    @Nullable
     private String album;
 
     @JsonBackReference
