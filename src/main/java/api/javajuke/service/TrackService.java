@@ -1,8 +1,8 @@
-package api.stenden.service;
+package api.javajuke.service;
 
-import api.stenden.data.TrackRepository;
-import api.stenden.data.model.Track;
-import api.stenden.exception.EntityNotFoundException;
+import api.javajuke.data.TrackRepository;
+import api.javajuke.data.model.Track;
+import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
