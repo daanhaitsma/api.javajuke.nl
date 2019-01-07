@@ -86,9 +86,7 @@ public class UserController {
         String user_email = email;
 
         //Check als email bestaat
-
-        //verwacht long userID moet email zijn..
-        return userRepository.findOne();
+        return userRepository.findByEmail(user_email);
     }
 }
 
