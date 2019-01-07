@@ -1,18 +1,14 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,12 +20,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Slf4j
 @Configuration
 @EnableTransactionManagement // Required for Hibernate
-@EnableJpaRepositories("api.stenden.data")
+@EnableJpaRepositories("api.javajuke.data")
 @PropertySource("classpath:database.properties")
 @NoArgsConstructor
 public class DatabaseConfig {
@@ -54,7 +49,7 @@ public class DatabaseConfig {
 //    {
 //        LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
 //        sfb.setDataSource(dataSource);
-//        sfb.setPackagesToScan("api.stenden.data.model");
+//        sfb.setPackagesToScan("api.javajuke.data.model");
 //        Properties props = new Properties();
 //        props.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
 //        sfb.setHibernateProperties(props);
@@ -91,7 +86,7 @@ public class DatabaseConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
-        entityManagerFactoryBean.setPackagesToScan("api.stenden.data.model");
+        entityManagerFactoryBean.setPackagesToScan("api.javajuke.data.model");
         return entityManagerFactoryBean;
     }
 }

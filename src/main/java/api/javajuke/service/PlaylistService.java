@@ -1,10 +1,10 @@
-package api.stenden.service;
+package api.javajuke.service;
 
-import api.stenden.data.PlaylistRepository;
-import api.stenden.data.model.Playlist;
-import api.stenden.data.model.Track;
-import api.stenden.exception.BadRequestException;
-import api.stenden.exception.EntityNotFoundException;
+import api.javajuke.data.PlaylistRepository;
+import api.javajuke.data.model.Playlist;
+import api.javajuke.data.model.Track;
+import api.javajuke.exception.BadRequestException;
+import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

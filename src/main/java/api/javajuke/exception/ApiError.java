@@ -1,4 +1,4 @@
-package api.stenden.exception;
+package api.javajuke.exception;
 
 import org.springframework.http.HttpStatus;
 
