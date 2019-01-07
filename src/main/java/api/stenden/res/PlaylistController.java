@@ -30,8 +30,9 @@ public class PlaylistController {
     @PostMapping(value = "/playlists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Playlist create(@RequestParam Map<String, String> body) {
         String name = body.get("name");
+        String token = body.get("token");
 
-        return playlistService.createPlaylist(name);
+        return playlistService.createPlaylist(name, token);
     }
 
     @GetMapping("/playlists/{id}")

@@ -1,6 +1,7 @@
 package api.stenden.service;
 
 import api.stenden.data.PlaylistRepository;
+import api.stenden.data.UserRepository;
 import api.stenden.data.model.Playlist;
 import api.stenden.data.model.Track;
 import api.stenden.exception.BadRequestException;
@@ -14,20 +15,29 @@ public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final TrackService trackService;
+    private final UserRepository userRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService, UserRepository userRepository) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
+        this.userRepository = userRepository;
     }
 
     public List<Playlist> getPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public Playlist createPlaylist(String name) {
-        Playlist playlist = new Playlist(name);
+    public Playlist createPlaylist(String name, String token) {
+        // Validate token
+        if(userRepository.findByToken(token).isPresent()) {
+            Playlist playlist = new Playlist(name);
 
-        return playlistRepository.save(playlist);
+            return playlistRepository.save(playlist);
+        }
+//        else {
+//            // Token not found
+//        }
+        return null;
     }
 
     public Playlist getPlaylist(long id) {

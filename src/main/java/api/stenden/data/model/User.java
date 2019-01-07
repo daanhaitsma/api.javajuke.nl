@@ -2,19 +2,23 @@ package api.stenden.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-public class User {
+public class User implements Authentication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String token;
     private String name;
+    private String password;
     @JsonBackReference
     @OneToMany(
             mappedBy = "user",
@@ -48,7 +52,45 @@ public class User {
         this.name = name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Set<Playlist> getPlaylists() {
         return playlists;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
+
+    @Override
+    public Object getDetails() {
+        return null;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return null;
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return false;
+    }
+
+    @Override
+    public void setAuthenticated(boolean b) throws IllegalArgumentException {
+
     }
 }
