@@ -39,7 +39,7 @@ public class TransactionFilter implements Filter {
         ServletContext servletContext = request.getServletContext();
         WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         UserRepository userRepository = webApplicationContext.getBean(UserRepository.class);
-        userRepository.findByToken(token).orElseThrow(() -> new EntityNotFoundException(token + " not found." ));
+        userRepository.findByToken(token).orElseThrow(() -> new SecurityException("User with token: " + token + " not found." ));
 
 
         chain.doFilter(request, response);
