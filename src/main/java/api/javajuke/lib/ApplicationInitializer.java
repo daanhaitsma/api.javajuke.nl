@@ -1,6 +1,8 @@
 package api.javajuke.lib;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.Filter;
+
 /**
  * This is the replacement of the web.xml
  */
@@ -37,6 +39,11 @@ public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherSe
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return null;
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        return new Filter[]{new TransactionFilter()};
     }
 
 }
