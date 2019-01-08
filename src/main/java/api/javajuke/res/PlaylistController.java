@@ -1,9 +1,9 @@
-package api.stenden.res;
+package api.javajuke.res;
 
-import api.stenden.data.model.Playlist;
-import api.stenden.exception.BadRequestException;
-import api.stenden.exception.EntityNotFoundException;
-import api.stenden.service.PlaylistService;
+import api.javajuke.data.model.Playlist;
+import api.javajuke.exception.BadRequestException;
+import api.javajuke.exception.EntityNotFoundException;
+import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;

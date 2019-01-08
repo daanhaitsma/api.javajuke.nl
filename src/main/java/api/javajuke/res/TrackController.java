@@ -1,21 +1,18 @@
-package api.stenden.res;
+package api.javajuke.res;
 
-import api.stenden.data.model.Track;
-import api.stenden.data.model.User;
-import api.stenden.exception.EntityNotFoundException;
-import api.stenden.service.TrackService;
+import api.javajuke.data.model.Track;
+import api.javajuke.exception.EntityNotFoundException;
+import api.javajuke.service.TrackService;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.standard.Media;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class TrackController {
@@ -39,7 +36,7 @@ public class TrackController {
     }
 
     @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Track create(@RequestParam("file") MultipartFile file) throws IOException {
+    public Track create(@RequestParam("file") MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
         return trackService.createTrack(file);
     }
 

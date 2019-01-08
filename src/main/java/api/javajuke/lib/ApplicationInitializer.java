@@ -1,4 +1,4 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**

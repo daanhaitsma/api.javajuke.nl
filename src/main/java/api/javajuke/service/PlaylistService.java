@@ -1,13 +1,13 @@
-package api.stenden.service;
+package api.javajuke.service;
 
-import api.stenden.data.PlaylistRepository;
-import api.stenden.data.UserRepository;
-import api.stenden.data.model.Playlist;
-import api.stenden.data.model.Track;
-import api.stenden.exception.BadRequestException;
-import api.stenden.exception.EntityNotFoundException;
+import api.javajuke.data.PlaylistRepository;
+import api.javajuke.data.model.Playlist;
+import api.javajuke.data.model.Track;
+import api.javajuke.exception.BadRequestException;
+import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -15,29 +15,20 @@ public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final TrackService trackService;
-    private final UserRepository userRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService, UserRepository userRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
-        this.userRepository = userRepository;
     }
 
     public List<Playlist> getPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public Playlist createPlaylist(String name, String token) {
-        // Validate token
-        if(userRepository.findByToken(token).isPresent()) {
-            Playlist playlist = new Playlist(name);
+    public Playlist createPlaylist(String name) {
+        Playlist playlist = new Playlist(name);
 
-            return playlistRepository.save(playlist);
-        }
-//        else {
-//            // Token not found
-//        }
-        return null;
+        return playlistRepository.save(playlist);
     }
 
     public Playlist getPlaylist(long id) {
@@ -72,10 +63,20 @@ public class PlaylistService {
     }
 
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
-        Track track = trackService.getTrack(trackId);
-
         Playlist playlist = getPlaylist(id);
-        playlist.getTracks().remove(track);
+
+        // Iterate over all the tracks
+        Iterator<Track> trackIterator = playlist.getTracks().iterator();
+        Boolean trackFound = false;
+        while (trackIterator.hasNext() && !trackFound) {
+            Track track = trackIterator.next();
+            // If the track to be deleted is found, actually delete it
+            if (track.getId() == trackId) {
+                trackIterator.remove();
+                // Stop when the track is found, so as to not keep iterating unnecessarily
+                trackFound = true;
+            }
+        }
 
         return playlistRepository.save(playlist);
     }

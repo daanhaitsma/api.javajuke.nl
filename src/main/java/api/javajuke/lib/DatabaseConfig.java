@@ -1,16 +1,14 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -18,31 +16,31 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Slf4j
 @Configuration
 @EnableTransactionManagement // Required for Hibernate
-@EnableJpaRepositories("api.stenden.data")
+@EnableJpaRepositories("api.javajuke.data")
+@PropertySource("classpath:application.properties")
 @NoArgsConstructor
 public class DatabaseConfig {
 
-    private final String DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
-    private final String URL = "jdbc:mysql://localhost:3306/javajuke?useLegacyDatetimeCode=false&serverTimezone=UTC";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "";
+    @Autowired
+    private Environment env;
 
 
     @Bean
     public DataSource dataSource()
     {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
-        dataSource.setUrl(URL);
-        dataSource.setUsername(USERNAME);
-        dataSource.setPassword(PASSWORD);
+        dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(env.getProperty("spring.datasource.url"));
+        dataSource.setUsername(env.getProperty("spring.datasource.username"));
+        dataSource.setPassword(env.getProperty("spring.datasource.password"));
         return dataSource;
     }
 
@@ -51,7 +49,7 @@ public class DatabaseConfig {
 //    {
 //        LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
 //        sfb.setDataSource(dataSource);
-//        sfb.setPackagesToScan("api.stenden.data.model");
+//        sfb.setPackagesToScan("api.javajuke.data.model");
 //        Properties props = new Properties();
 //        props.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
 //        sfb.setHibernateProperties(props);
@@ -88,7 +86,7 @@ public class DatabaseConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
-        entityManagerFactoryBean.setPackagesToScan("api.stenden.data.model");
+        entityManagerFactoryBean.setPackagesToScan("api.javajuke.data.model");
         return entityManagerFactoryBean;
     }
 }
