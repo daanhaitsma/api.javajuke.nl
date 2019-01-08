@@ -1,4 +1,4 @@
-package api.stenden.data.model;
+package api.javajuke.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
