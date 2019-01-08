@@ -32,7 +32,7 @@ public class PlaylistController {
         String name = body.get("name");
         String token = body.get("token");
 
-        return playlistService.createPlaylist(name, token);
+        return playlistService.createPlaylist(name);
     }
 
     @GetMapping("/playlists/{id}")
