@@ -1,10 +1,11 @@
-package api.stenden.service;
+package api.javajuke.service;
 
 import jaco.mp3.player.MP3Player;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 
-
+@Service
 public class MediaplayerService {
 
  public static void main(String[] args){
