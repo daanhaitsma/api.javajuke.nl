@@ -1,8 +1,6 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
-import api.stenden.data.UserRepository;
-import api.stenden.data.model.User;
-import org.omg.CORBA.UnknownUserException;
+import api.javajuke.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

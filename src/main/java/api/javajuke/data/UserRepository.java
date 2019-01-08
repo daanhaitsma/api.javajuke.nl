@@ -1,6 +1,6 @@
-package api.stenden.data;
+package api.javajuke.data;
 
-import api.stenden.data.model.User;
+import api.javajuke.data.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

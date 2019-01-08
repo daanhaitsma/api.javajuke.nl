@@ -1,8 +1,8 @@
-package api.stenden.service;
+package api.javajuke.service;
 
-import api.stenden.data.UserRepository;
-import api.stenden.data.model.User;
-import api.stenden.exception.EntityNotFoundException;
+import api.javajuke.data.UserRepository;
+import api.javajuke.data.model.User;
+import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

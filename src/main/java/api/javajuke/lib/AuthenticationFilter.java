@@ -1,11 +1,9 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
-import api.stenden.data.UserRepository;
-import api.stenden.data.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import api.javajuke.data.UserRepository;
+import api.javajuke.data.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

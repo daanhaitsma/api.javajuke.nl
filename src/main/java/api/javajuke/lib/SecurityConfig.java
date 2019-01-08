@@ -1,6 +1,7 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
-import api.stenden.data.UserRepository;
+import api.javajuke.data.UserRepository;
+import api.javajuke.lib.ApiAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

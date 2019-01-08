@@ -1,6 +1,6 @@
-package api.stenden.lib;
+package api.javajuke.lib;
 
-import api.stenden.data.model.User;
+import api.javajuke.data.model.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
