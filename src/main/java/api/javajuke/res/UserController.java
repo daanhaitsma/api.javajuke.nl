@@ -28,7 +28,7 @@ public class UserController {
         return userService.loginUser(email, username, password);
     }
 
-    @PutMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public User register(@RequestBody MultiValueMap<String, String> body) throws EntityNotFoundException, BadRequestException {
         String email = body.getFirst("email");
         String username = body.getFirst("username");
