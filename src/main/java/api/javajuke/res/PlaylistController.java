@@ -5,10 +5,14 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -59,5 +63,12 @@ public class PlaylistController {
     @DeleteMapping(value = "/playlists/{id}/tracks/{trackId}")
     public Playlist removeTrackFromPlaylist(@PathVariable long id, @PathVariable long trackId) {
         return playlistService.removeTrackFromPlaylist(id, trackId);
+    }
+
+    @RequestMapping("/handle")
+    public ResponseEntity<String> handle() {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("MyResponseHeader", "MyValue");
+        return new ResponseEntity<String>("Test Unauthorized", responseHeaders, HttpStatus.UNAUTHORIZED);
     }
 }
