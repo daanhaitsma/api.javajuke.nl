@@ -7,25 +7,80 @@ import java.io.File;
 
 @Service
 public class MediaplayerService {
-
- public static void main(String[] args){
-     PlayerThread player_thread = new PlayerThread();
-     player_thread.start();
- }
-}
-
-class PlayerThread extends Thread{
     MP3Player mp3Player;
+    PlayerThread player_thread;
+    boolean isPlaying = false;
+    boolean isPaused = false;
 
-    public void run(){
-        try {
-            mp3Player = new MP3Player(new File("resource/Cage The Elephant - Trouble.mp3"));
+    //Starts a new thread in which the mediaplayer gets instantiated
+    public MediaplayerService(){
+        player_thread = new PlayerThread();
+    }
+
+    //Checks if the mp3Player is player is playing or paused
+    //If both booleans are false, the thread will start else it will start playing the current song
+    public void playMusic() {
+        if (!isPlaying && !isPaused) {
+            player_thread.start();
+        } else if(isPlaying) {
+
+        }else
+        {
             mp3Player.play();
-            while(!mp3Player.isStopped()){
-                Thread.sleep(5000);
+        }
+
+    }
+
+    //Checks if mp3Player is currently playing music
+    //If true the mp3Player will pause
+    public void pauseMusic(){
+        if(isPlaying){
+            mp3Player.pause();
+            isPlaying = false;
+            isPaused = true;
+        }
+    }
+
+    //Plays the next song on the playlist
+    public void nextSong(){
+        mp3Player.skipForward();
+    }
+
+    //Plays the previous song on the playlist
+    public void previousSong(){
+        mp3Player.skipBackward();
+    }
+
+    //Shuffles the playlist
+    public void shuffle(){
+        if(mp3Player.isShuffle()){
+            mp3Player.setShuffle(true);
+        }else{
+            mp3Player.setShuffle(false);
+        }
+    }
+
+    public void setVolume(int volume){
+        mp3Player.setVolume(volume);
+    }
+
+    class PlayerThread extends Thread{
+        //Instantiates the mp3Player and plays the current song
+        public void run(){
+            try {//C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/211-nightclub.mp3
+                ///upload/211-nightclub.mp3
+                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File("/upload/211-nightclub.mp3")});
+                MediaplayerService.this.mp3Player.play();
+                isPlaying = true;
+                isPaused = true;
+                //Waits till the song has ended and puts the thread to sleep
+                while(!MediaplayerService.this.mp3Player.isStopped()){
+                    Thread.sleep(5000);
+                }
+            }catch(Exception e) {
+                System.err.println(e);
             }
-        }catch(Exception e) {
-            System.err.println(e);
         }
     }
 }
+
