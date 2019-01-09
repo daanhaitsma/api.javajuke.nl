@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import jdk.internal.jline.internal.Nullable;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -27,10 +29,13 @@ public class User {
     )
     private Set<Playlist> playlists = new HashSet<>();
 
+    public User(){ }
+
     public User(String email, String username, String password){
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.token = UUID.randomUUID().toString();
     }
 
     public long getId() {

@@ -26,9 +26,7 @@ public class UserController {
         String username = body.getFirst("username");
         String password = body.getFirst("password");
 
-        User user = userService.loginUser(email, username, password);
-
-        return user.getToken();
+        return userService.loginUser(email, username, password);
     }
 
     @PutMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
