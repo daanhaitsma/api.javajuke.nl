@@ -6,6 +6,8 @@ import api.javajuke.exception.EntityNotFoundException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -20,6 +22,8 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
 
         if (BCrypt.checkpw(password, user.getPassword())){
+            user.setToken(UUID.randomUUID().toString());
+            userRepository.save(user);
             return user.getToken();
         }else{
             throw new EntityNotFoundException("Login credentials are incorrect.");
@@ -34,5 +38,13 @@ public class UserService {
             return newUser;
         }
         throw new EntityNotFoundException("There's already a user with the same username or email");
+    }
+
+    public void logoutUser(String token){
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        user.setToken("");
+        userRepository.save(user);
     }
 }
