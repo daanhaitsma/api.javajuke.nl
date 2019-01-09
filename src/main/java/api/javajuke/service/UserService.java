@@ -31,9 +31,4 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
-
-    public User getUserByToken(String token){
-        return userRepository.findByToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("User with token " + token + " not found." ));
-    }
 }
