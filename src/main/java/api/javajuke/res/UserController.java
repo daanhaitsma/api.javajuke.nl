@@ -34,6 +34,8 @@ public class UserController {
         String username = body.getFirst("username");
         String password = body.getFirst("password");
 
-        return userService.createUser(email, username, password);
+        User user = userService.createUser(email, username, password);
+        user.setPassword("");
+        return user;
     }
 }
