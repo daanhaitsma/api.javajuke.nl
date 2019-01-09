@@ -2,23 +2,26 @@ package api.javajuke.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import com.sun.istack.NotNull;
+import jdk.internal.jline.internal.Nullable;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-public class User implements Authentication {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String token;
+    private String email;
     private String username;
     private String password;
+    @Nullable
+    private String token;
     @JsonBackReference
     @OneToMany(
             mappedBy = "user",
@@ -26,7 +29,14 @@ public class User implements Authentication {
     )
     private Set<Playlist> playlists = new HashSet<>();
 
-    public User() {}
+    public User(){ }
+
+    public User(String email, String username, String password){
+        this.email = email;
+        this.username = username;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.token = UUID.randomUUID().toString();
+    }
 
     public long getId() {
         return id;
@@ -36,19 +46,19 @@ public class User implements Authentication {
         this.id = id;
     }
 
-    public String getToken() {
-        return token;
+    public String getEmail() {
+        return email;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setName(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -60,37 +70,19 @@ public class User implements Authentication {
         this.password = password;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public Set<Playlist> getPlaylists() {
         return playlists;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public Object getCredentials() {
-        return null;
-    }
-
-    @Override
-    public Object getDetails() {
-        return null;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return null;
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        return false;
-    }
-
-    @Override
-    public void setAuthenticated(boolean b) throws IllegalArgumentException {
-
+    public void setPlaylists(Set<Playlist> playlists) {
+        this.playlists = playlists;
     }
 }
