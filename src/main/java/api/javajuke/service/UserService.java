@@ -42,7 +42,7 @@ public class UserService {
 
     public void logoutUser(String token){
         User user = userRepository.findByToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
 
         user.setToken("");
         userRepository.save(user);
