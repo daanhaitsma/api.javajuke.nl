@@ -64,11 +64,4 @@ public class PlaylistController {
     public Playlist removeTrackFromPlaylist(@PathVariable long id, @PathVariable long trackId) {
         return playlistService.removeTrackFromPlaylist(id, trackId);
     }
-
-    @RequestMapping("/handle")
-    public ResponseEntity<String> handle() {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("MyResponseHeader", "MyValue");
-        return new ResponseEntity<String>("Test Unauthorized", responseHeaders, HttpStatus.UNAUTHORIZED);
-    }
 }
