@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import com.mpatric.mp3agic.*;
 
 @Service
 public class TrackService {
@@ -33,7 +34,7 @@ public class TrackService {
                 .orElseThrow(() -> new EntityNotFoundException("Track with ID " + id + " not found." ));
     }
 
-    public Track createTrack(MultipartFile file) throws IOException {
+    public Track createTrack(MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
         if(!new File(uploadDirectory).exists())
         {
             new File(uploadDirectory).mkdir();
@@ -46,6 +47,15 @@ public class TrackService {
         file.transferTo(destination);
 
         Track track = new Track(filePath);
+
+        Mp3File mp3File = new Mp3File(destination);
+        track.setDuration(mp3File.getLengthInSeconds());
+        if(mp3File.hasId3v1Tag()){
+            ID3v1 id3v1Tag = mp3File.getId3v1Tag();
+            track.setArtist(id3v1Tag.getArtist());
+            track.setTitle(id3v1Tag.getTitle());
+            track.setAlbum(id3v1Tag.getAlbum());
+        }
 
         return trackRepository.save(track);
     }
