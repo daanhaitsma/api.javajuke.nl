@@ -17,7 +17,7 @@ public class User implements Authentication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String token;
-    private String name;
+    private String username;
     private String password;
     @JsonBackReference
     @OneToMany(
@@ -45,11 +45,11 @@ public class User implements Authentication {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
