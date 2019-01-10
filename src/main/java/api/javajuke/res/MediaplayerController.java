@@ -1,8 +1,12 @@
 package api.javajuke.res;
 
+import api.javajuke.data.model.Position;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.MediaplayerService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -46,4 +50,14 @@ public class MediaplayerController {
         String volume = body.getFirst("volume");
         mediaplayerService.setVolume(Integer.valueOf(volume));
     }
+
+    @GetMapping("/position")
+    public Position getPosition(){
+        if (mediaplayerService.isPlaying() || mediaplayerService.isPaused()) {
+            return new Position(mediaplayerService.getPosition());
+        } else {
+            return new Position(0);
+        }
+    }
+
 }

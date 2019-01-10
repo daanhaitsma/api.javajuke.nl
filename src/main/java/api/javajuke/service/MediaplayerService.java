@@ -12,6 +12,13 @@ public class MediaplayerService {
     boolean isPlaying = false;
     boolean isPaused = false;
 
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+    public boolean isPaused() {
+        return isPaused;
+    }
+
     //Starts a new thread in which the mediaplayer gets instantiated
     public MediaplayerService(){
         player_thread = new PlayerThread();
