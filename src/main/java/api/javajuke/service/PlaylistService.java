@@ -61,20 +61,13 @@ public class PlaylistService {
 
         Playlist playlist = getPlaylist(id);
 
-        // Iterate over all the tracks
-        Iterator<Track> trackIterator = playlist.getTracks().iterator();
-        Boolean trackFound = false;
-        while (trackIterator.hasNext() && !trackFound) {
-            Track playlistTrack = trackIterator.next();
+        // Iterate over all the tracks in the playlist
+        for (Track playlistTrack : playlist.getTracks()) {
             // If the track to be added is already found, don't add it again
             if (playlistTrack.getId() == trackId) {
                 // Stop when the track is found, so as to not keep iterating unnecessarily
-                trackFound = true;
+                throw new BadRequestException("Track already exists in this playlist");
             }
-        }
-
-        if(trackFound) {
-            throw new BadRequestException("Track already exists in this playlist");
         }
 
         playlist.getTracks().add(track);
@@ -85,19 +78,18 @@ public class PlaylistService {
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
         Playlist playlist = getPlaylist(id);
 
-        // Iterate over all the tracks
         Iterator<Track> trackIterator = playlist.getTracks().iterator();
-        Boolean trackFound = false;
-        while (trackIterator.hasNext() && !trackFound) {
+        // Iterate over all the tracks
+        while (trackIterator.hasNext()) {
             Track track = trackIterator.next();
             // If the track to be deleted is found, actually delete it
             if (track.getId() == trackId) {
                 trackIterator.remove();
                 // Stop when the track is found, so as to not keep iterating unnecessarily
-                trackFound = true;
+                return playlistRepository.save(playlist);
             }
         }
 
-        return playlistRepository.save(playlist);
+        throw new BadRequestException("Track doesn't exists in this playlist");
     }
 }
