@@ -30,6 +30,11 @@ public class MediaplayerController {
         mediaplayerService.pauseMusic();
     }
 
+    @GetMapping("/stopmusic")
+    public void stopMusic(){
+        mediaplayerService.stopMusic();
+    }
+
     @GetMapping("/nextsong")
     public void nextSong(){
         mediaplayerService.nextSong();
@@ -58,6 +63,11 @@ public class MediaplayerController {
         } else {
             return new Position(0);
         }
+    }
+    
+    @GetMapping("/addsong")
+    public void addSong(){
+        mediaplayerService.addSong();
     }
 
 }
