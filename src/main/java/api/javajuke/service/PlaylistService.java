@@ -5,8 +5,11 @@ import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,9 +60,26 @@ public class PlaylistService {
         Track track = trackService.getTrack(trackId);
 
         Playlist playlist = getPlaylist(id);
-        playlist.getTracks().add(track);
 
+        // Iterate over all the tracks
+        Iterator<Track> trackIterator = playlist.getTracks().iterator();
+        Boolean trackFound = false;
+        while (trackIterator.hasNext() && !trackFound) {
+            Track playlistTrack = trackIterator.next();
+            // If the track to be added is already found, don't add it again
+            if (playlistTrack.getId() == trackId) {
+                // Stop when the track is found, so as to not keep iterating unnecessarily
+                trackFound = true;
+            }
+        }
+
+        if(trackFound) {
+            throw new BadRequestException("Track already exists in this playlist");
+        }
+
+        playlist.getTracks().add(track);
         return playlistRepository.save(playlist);
+
     }
 
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
