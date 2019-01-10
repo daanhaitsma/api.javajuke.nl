@@ -17,15 +17,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UnitTests {
+public class TrackServiceUnitTest {
 
     @Mock
     private TrackRepository trackRepository;
-    private TrackRepository playlistRepository;
 
     @InjectMocks
     private TrackService trackService;
-    private PlaylistService playlistService;
 
     @Test
     public void testGetTrack() {
@@ -36,15 +34,4 @@ public class UnitTests {
 
         Assert.assertEquals(track.getPath(), "/example/path");
     }
-
-    @Test
-    public void testGetPlaylist() {
-        Playlist dummyPlaylist = new Playlist("Playlist 1");
-        when(playlistRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(dummyPlaylist));
-
-        Playlist playlist = playlistService.getPlaylist(1);
-
-        Assert.assertEquals(playlist.getName(), "Playlist 1");
-    }
-
 }
