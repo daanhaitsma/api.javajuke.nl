@@ -22,11 +22,16 @@ public class MediaplayerService {
     public void playMusic() {
         if (!isPlaying && !isPaused) {
             player_thread.start();
+
+            isPlaying = true;
+            isPaused = false;
         } else if(isPlaying) {
 
         }else
         {
             mp3Player.play();
+            isPlaying = true;
+            isPaused = false;
         }
 
     }
@@ -64,12 +69,16 @@ public class MediaplayerService {
         mp3Player.setVolume(volume);
     }
 
+    public void addToPlaylist(File file){
+        mp3Player.add(file);
+    }
+
     class PlayerThread extends Thread{
         //Instantiates the mp3Player and plays the current song
         public void run(){
             try {//C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/211-nightclub.mp3
                 ///upload/211-nightclub.mp3
-                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File("/upload/211-nightclub.mp3")});
+                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File("//C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/211-nightclub.mp3")});
                 MediaplayerService.this.mp3Player.play();
                 isPlaying = true;
                 isPaused = true;

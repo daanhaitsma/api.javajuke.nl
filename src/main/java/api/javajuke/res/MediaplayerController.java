@@ -1,7 +1,10 @@
 package api.javajuke.res;
 
+import api.javajuke.exception.BadRequestException;
+import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.MediaplayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,8 +41,9 @@ public class MediaplayerController {
         mediaplayerService.shuffle();
     }
 
-    @PutMapping("/setvolume/{volume}")
-    public void setVolume(@PathVariable("volume") int volume){
-        mediaplayerService.setVolume(volume);
+    @PutMapping("/volume")
+    public void setVolume(@RequestBody MultiValueMap<String, String> body){
+        String volume = body.getFirst("volume");
+        mediaplayerService.setVolume(Integer.valueOf(volume));
     }
 }
