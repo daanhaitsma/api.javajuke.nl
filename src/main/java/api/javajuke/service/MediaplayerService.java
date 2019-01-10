@@ -92,6 +92,10 @@ public class MediaplayerService {
         mp3Player.add(file);
     }
 
+    public int getPosition() {
+        return mp3Player.getPosition();
+    }
+
     class PlayerThread extends Thread{
         //Instantiates the mp3Player and plays the current song
         public void run(){
