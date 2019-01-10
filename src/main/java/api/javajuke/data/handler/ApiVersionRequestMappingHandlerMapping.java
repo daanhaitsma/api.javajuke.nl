@@ -1,16 +1,21 @@
 package api.javajuke.data.handler;
 
 import api.javajuke.data.annotation.ApiVersion;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
+import java.util.stream.IntStream;
 
 public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 
     private final String prefix;
+
+    @Value("${juke.api.version}")
+    private int latestVersion;
 
     public ApiVersionRequestMappingHandlerMapping(String prefix) {
         this.prefix = prefix;
@@ -40,7 +45,8 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 
     private RequestMappingInfo createApiVersionInfo(ApiVersion annotation, RequestCondition<?> customCondition) {
         int[] values = annotation.value();
-        String[] patterns = new String[values.length];
+        int length = IntStream.of(values).anyMatch(x -> x == latestVersion) ? values.length + 1 : values.length;
+        String[] patterns = new String[length];
         for(int i=0; i<values.length; i++) {
             // Build the URL prefix
             patterns[i] = prefix+values[i];
