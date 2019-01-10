@@ -1,6 +1,8 @@
 package api.javajuke.service;
 
 import jaco.mp3.player.MP3Player;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.Console;
@@ -8,6 +10,10 @@ import java.io.File;
 
 @Service
 public class MediaplayerService {
+
+    @Autowired
+    private Environment env;
+
     MP3Player mp3Player;
     PlayerThread player_thread;
     boolean isPlaying = false;
@@ -99,9 +105,8 @@ public class MediaplayerService {
     class PlayerThread extends Thread{
         //Instantiates the mp3Player and plays the current song
         public void run(){
-            try {//C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/211-nightclub.mp3
-                ///upload/211-nightclub.mp3
-                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File("C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/211-nightclub.mp3")});
+            try {
+                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File(env.getProperty("debug.song.path"))});
                 MediaplayerService.this.mp3Player.play();
                 isPlaying = true;
                 isPaused = false;
