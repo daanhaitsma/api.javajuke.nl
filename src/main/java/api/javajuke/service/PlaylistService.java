@@ -55,8 +55,15 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public void deletePlaylist(long id) {
+    public void deletePlaylist(long id, String token) {
         Playlist playlist = getPlaylist(id);
+
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        if(playlist.getUser().getId() != user.getId()) {
+            throw new BadRequestException("Wrong user");
+        }
 
         playlistRepository.delete(playlist);
     }

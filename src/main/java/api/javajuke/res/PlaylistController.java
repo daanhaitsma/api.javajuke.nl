@@ -47,8 +47,8 @@ public class PlaylistController {
     }
 
     @DeleteMapping("/playlists/{id}")
-    public void delete(@PathVariable("id") long id) throws EntityNotFoundException {
-        playlistService.deletePlaylist(id);
+    public void delete(@RequestHeader(value = "X-Authorization") String token, @PathVariable("id") long id) throws EntityNotFoundException{
+        playlistService.deletePlaylist(id, token);
     }
 
     @PostMapping(value = "/playlists/{id}/tracks/{trackId}")
