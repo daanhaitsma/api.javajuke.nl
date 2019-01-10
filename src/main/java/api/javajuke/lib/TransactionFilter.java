@@ -2,6 +2,7 @@ package api.javajuke.lib;
 
 import api.javajuke.data.UserRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -28,6 +29,13 @@ public class TransactionFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
         HttpServletRequest req = (HttpServletRequest) request;
+
+        // Whitelist every request with OPTIONS request method
+        if(req.getMethod().equals(RequestMethod.OPTIONS.name())){
+            chain.doFilter(request, response);
+            return;
+        }
+
         // Whitelisted requests like /register and /login do not need authorization
         if(whitelisted.contains(req.getRequestURI())) {
             chain.doFilter(request, response);
