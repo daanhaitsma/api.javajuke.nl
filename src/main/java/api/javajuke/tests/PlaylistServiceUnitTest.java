@@ -1,11 +1,8 @@
 package api.javajuke.tests;
 
 import api.javajuke.data.PlaylistRepository;
-import api.javajuke.data.TrackRepository;
 import api.javajuke.data.model.Playlist;
-import api.javajuke.data.model.Track;
 import api.javajuke.service.PlaylistService;
-import api.javajuke.service.TrackService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
