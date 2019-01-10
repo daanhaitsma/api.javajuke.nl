@@ -76,7 +76,7 @@ public class PlaylistController {
             Track track = trackIterator.next();
             mediaplayerService.addToPlaylist(new File(track.getPath()));
         }
-        //mediaplayerService.playMusic();
+        mediaplayerService.playMusic();
     }
 
     private final MediaplayerService mediaplayerService;

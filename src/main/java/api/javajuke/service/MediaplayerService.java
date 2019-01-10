@@ -26,12 +26,12 @@ public class MediaplayerService {
         return isPaused;
     }
 
-    //Starts a new thread in which the mediaplayer gets instantiated
     public MediaplayerService(){
 
     }
 
     //Checks if the mp3Player is playing or paused
+    //Starts a new thread in which the mp3Player gets instantiated
     //If both booleans are false, the thread will start else it will start playing the current song
     public void playMusic() {
         if (!isPlaying && !isPaused) {
@@ -58,6 +58,7 @@ public class MediaplayerService {
         }
     }
 
+    //Stops the mp3Player and closes the thread
     public void stopMusic(){
         if(isPlaying || isPaused){
             mp3Player.stop();
@@ -85,7 +86,7 @@ public class MediaplayerService {
             mp3Player.setShuffle(false);
         }
     }
-
+    //Sets the volume of the mp3Player
     public void setVolume(int volume){
         mp3Player.setVolume(volume);
     }
@@ -94,6 +95,7 @@ public class MediaplayerService {
         mp3Player.add(new File("C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/Cage The Elephant - Trouble.mp3"));
     }
 
+    //Adds a song to the playlist
     public void addToPlaylist(File file){
         mp3Player.add(file);
     }
