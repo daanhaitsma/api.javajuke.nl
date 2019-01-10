@@ -38,4 +38,9 @@ public class UserController {
         user.setPassword("");
         return user;
     }
+
+    @GetMapping(value = "/logout", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public void logout(@RequestHeader(value = "X-Authorization") String token){
+        userService.logoutUser(token);
+    }
 }
