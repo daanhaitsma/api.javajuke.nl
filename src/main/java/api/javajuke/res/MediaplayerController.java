@@ -26,6 +26,11 @@ public class MediaplayerController {
         mediaplayerService.pauseMusic();
     }
 
+    @GetMapping("/stopmusic")
+    public void stopMusic(){
+        mediaplayerService.stopMusic();
+    }
+
     @GetMapping("/nextsong")
     public void nextSong(){
         mediaplayerService.nextSong();
@@ -45,5 +50,10 @@ public class MediaplayerController {
     public void setVolume(@RequestBody MultiValueMap<String, String> body){
         String volume = body.getFirst("volume");
         mediaplayerService.setVolume(Integer.valueOf(volume));
+    }
+
+    @GetMapping("/addsong")
+    public void addSong(){
+        mediaplayerService.addSong();
     }
 }
