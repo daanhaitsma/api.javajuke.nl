@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(@RequestBody MultiValueMap<String, String> body){
+    public User login(@RequestBody MultiValueMap<String, String> body){
         String email = body.getFirst("email");
         String username = body.getFirst("username");
         String password = body.getFirst("password");
@@ -42,5 +42,10 @@ public class UserController {
     @GetMapping(value = "/logout", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void logout(@RequestHeader(value = "X-Authorization") String token){
         userService.logoutUser(token);
+    }
+
+    @GetMapping(value = "/getuser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public User getUserByToken(@RequestHeader(value = "X-Authorization") String token){
+        return userService.getUserByToken(token);
     }
 }

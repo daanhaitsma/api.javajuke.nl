@@ -17,14 +17,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String loginUser(String email, String username, String password){
+    public User loginUser(String email, String username, String password){
         User user = userRepository.findByUsernameOrEmail(username, email)
                 .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
 
         if (BCrypt.checkpw(password, user.getPassword())){
             user.setToken(UUID.randomUUID().toString());
             userRepository.save(user);
-            return user.getToken();
+            return user;
         }else{
             throw new EntityNotFoundException("Login credentials are incorrect.");
         }
@@ -46,5 +46,10 @@ public class UserService {
 
         user.setToken("");
         userRepository.save(user);
+    }
+
+    public User getUserByToken(String token){
+        return userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
     }
 }
