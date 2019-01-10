@@ -31,7 +31,7 @@ public class UserController {
      * @return the token for the logged in user
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(@RequestBody MultiValueMap<String, String> body){
+    public User login(@RequestBody MultiValueMap<String, String> body){
         String email = body.getFirst("email");
         String username = body.getFirst("username");
         String password = body.getFirst("password");

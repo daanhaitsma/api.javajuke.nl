@@ -31,14 +31,13 @@ public class UserService {
      * @param password the users password
      * @return the logged in users token
      */
-    public String loginUser(String email, String username, String password){
+    public User loginUser(String email, String username, String password){
         User user = userRepository.findByUsernameOrEmail(username, email)
                 .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
 
         if (BCrypt.checkpw(password, user.getPassword())){
             user.setToken(UUID.randomUUID().toString());
-            userRepository.save(user);
-            return user.getToken();
+            return userRepository.save(user);
         }else{
             throw new EntityNotFoundException("Login credentials are incorrect.");
         }
