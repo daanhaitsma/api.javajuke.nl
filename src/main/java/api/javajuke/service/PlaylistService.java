@@ -1,12 +1,12 @@
 package api.javajuke.service;
 
 import api.javajuke.data.PlaylistRepository;
+import api.javajuke.data.UserRepository;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
+import api.javajuke.data.model.User;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,18 +18,23 @@ public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final TrackService trackService;
+    private final UserRepository userRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService, UserRepository userRepository) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
+        this.userRepository = userRepository;
     }
 
     public List<Playlist> getPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public Playlist createPlaylist(String name) {
-        Playlist playlist = new Playlist(name);
+    public Playlist createPlaylist(String name, String token) {
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        Playlist playlist = new Playlist(name, user);
 
         return playlistRepository.save(playlist);
     }

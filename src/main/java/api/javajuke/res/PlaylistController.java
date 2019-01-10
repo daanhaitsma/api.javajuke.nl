@@ -5,14 +5,10 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +28,10 @@ public class PlaylistController {
     }
 
     @PostMapping(value = "/playlists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Playlist create(@RequestParam Map<String, String> body) {
+    public Playlist create(@RequestParam Map<String, String> body, @RequestHeader(value = "X-Authorization") String token) {
         String name = body.get("name");
 
-        return playlistService.createPlaylist(name);
+        return playlistService.createPlaylist(name, token);
     }
 
     @GetMapping("/playlists/{id}")

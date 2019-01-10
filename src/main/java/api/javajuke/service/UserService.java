@@ -47,4 +47,10 @@ public class UserService {
         user.setToken("");
         userRepository.save(user);
     }
+
+    public User getUserByToken(String token){
+        return userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+    }
+
 }

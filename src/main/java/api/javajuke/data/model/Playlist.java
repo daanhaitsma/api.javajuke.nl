@@ -38,8 +38,9 @@ public class Playlist {
 
     public Playlist() {}
 
-    public Playlist(String name) {
+    public Playlist(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 
     public long getId() {
@@ -73,5 +74,4 @@ public class Playlist {
     public void setUser(User user) {
         this.user = user;
     }
-
 }
