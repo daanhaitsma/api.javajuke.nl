@@ -4,6 +4,7 @@ import api.javajuke.data.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,11 @@ public class TransactionFilter implements Filter {
 
     private final List<String> whitelisted;
 
+    /**
+     * Constructor for the TransactionFilter class.
+     * Fills the whitelisted list with whitelisted endpoints that
+     * do not require any authentication.
+     */
     public TransactionFilter() {
         whitelisted = new ArrayList<String>() {{
             add("/login");
@@ -24,6 +30,16 @@ public class TransactionFilter implements Filter {
         }};
     }
 
+    /**
+     * Filters a requests and checks if the specified token in the header is valid by
+     * checking if a user with that token exists in the database.
+     *
+     * @param request  the request that is being received
+     * @param response the response that is going to be given back
+     * @param chain    the current filter chain
+     * @throws IOException when an IO error occurs
+     * @throws ServletException when the servlet is invalid
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
