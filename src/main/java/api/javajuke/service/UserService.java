@@ -47,4 +47,9 @@ public class UserService {
         user.setToken("");
         userRepository.save(user);
     }
+
+    public User getUser(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found." ));
+    }
 }

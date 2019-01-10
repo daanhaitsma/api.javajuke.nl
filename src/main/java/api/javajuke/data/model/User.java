@@ -2,9 +2,9 @@ package api.javajuke.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jdk.internal.jline.internal.Nullable;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;

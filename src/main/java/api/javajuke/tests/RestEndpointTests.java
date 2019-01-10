@@ -2,6 +2,10 @@ package api.javajuke.tests;
 
 import static org.hamcrest.Matchers.greaterThan;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
