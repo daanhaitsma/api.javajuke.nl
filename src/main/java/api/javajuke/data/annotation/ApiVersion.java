@@ -8,5 +8,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiVersion {
+    // Array of integers containing all versions for an endpoint
     int[] value();
 }

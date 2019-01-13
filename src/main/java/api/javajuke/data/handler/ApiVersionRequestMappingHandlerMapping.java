@@ -21,18 +21,30 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
         this.prefix = prefix;
     }
 
+    /**
+     * Overrides the base method by adding a check if the method contains an ApiVersion
+     * annotation. If the annotation exists, the versions that are set in the annotation will be
+     * combined into the existing RequestMappingInfo patterns for that method.
+     *
+     * @param method the current method
+     * @param handlerType the current handler type
+     *
+     * @return the default RequestMappingInfo object or a combined one with new version patterns
+     */
     @Override
     protected RequestMappingInfo getMappingForMethod(Method method, Class<?> handlerType) {
         RequestMappingInfo info = super.getMappingForMethod(method, handlerType);
         if(info == null) return null;
 
         ApiVersion methodAnnotation = AnnotationUtils.findAnnotation(method, ApiVersion.class);
+        // Check if the method has the ApiVersion annotation
         if(methodAnnotation != null) {
             RequestCondition<?> methodCondition = getCustomMethodCondition(method);
             // Concatenate our ApiVersion with the usual request mapping
             info = createApiVersionInfo(methodAnnotation, methodCondition).combine(info);
         } else {
             ApiVersion typeAnnotation = AnnotationUtils.findAnnotation(handlerType, ApiVersion.class);
+            // Check if the controller has the ApiVersion annotation
             if(typeAnnotation != null) {
                 RequestCondition<?> typeCondition = getCustomTypeCondition(handlerType);
                 // Concatenate our ApiVersion with the usual request mapping
@@ -45,11 +57,12 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 
     private RequestMappingInfo createApiVersionInfo(ApiVersion annotation, RequestCondition<?> customCondition) {
         int[] values = annotation.value();
+        // Check if the versions contain the latest version, and if so, create an empty slot in the array
         int length = IntStream.of(values).anyMatch(x -> x == latestVersion) ? values.length + 1 : values.length;
         String[] patterns = new String[length];
-        for(int i=0; i<values.length; i++) {
+        for(int i = 0; i < values.length; i++) {
             // Build the URL prefix
-            patterns[i] = prefix+values[i];
+            patterns[i] = prefix + values[i];
         }
 
         return new RequestMappingInfo(
