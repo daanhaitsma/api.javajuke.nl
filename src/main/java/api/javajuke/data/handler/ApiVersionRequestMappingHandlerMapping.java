@@ -55,6 +55,15 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
         return info;
     }
 
+    /**
+     * Creates a new RequestMappingInfo object containing patterns for each version which
+     * is specified in the ApiVersion annotation.
+     *
+     * @param annotation the ApiVersion annotation which was used
+     * @param customCondition the custom condition based on the handler type
+     *
+     * @return RequestMappingInfo object with patterns containing the versions specified in the annotation
+     */
     private RequestMappingInfo createApiVersionInfo(ApiVersion annotation, RequestCondition<?> customCondition) {
         int[] values = annotation.value();
         // Check if the versions contain the latest version, and if so, create an empty slot in the array
