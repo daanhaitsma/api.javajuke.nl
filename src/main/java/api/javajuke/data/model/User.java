@@ -1,6 +1,7 @@
 package api.javajuke.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -17,6 +18,7 @@ public class User {
     private long id;
     private String email;
     private String username;
+    @JsonIgnore
     private String password;
     @Nullable
     private String token;

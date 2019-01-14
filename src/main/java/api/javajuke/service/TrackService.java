@@ -31,7 +31,7 @@ public class TrackService {
     }
 
     /**
-     * Returns a List object containing all Tracks
+     * Returns a List object containing all tracks
      * that are stored in the database.
 
      * @return a list with all tracks
