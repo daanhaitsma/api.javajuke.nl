@@ -66,7 +66,7 @@ public class PlaylistController {
         return playlistService.removeTrackFromPlaylist(id, trackId);
     }
 
-    @GetMapping(value = "/playlists/{id}/play")
+    @PutMapping(value = "/playlists/{id}/play")
     public void play(@PathVariable("id") long id){
         Playlist playlist = playlistService.getPlaylist(id);
         mediaplayerService.playPlaylist(playlist);
