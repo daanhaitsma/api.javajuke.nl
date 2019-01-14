@@ -73,17 +73,29 @@ public class TrackService {
         String filePath = uploadDirectory + fileName;
 
         File destination = new File(filePath);
-        file.transferTo(destination);
 
         Track track = new Track(filePath);
+        file.transferTo(destination);
 
         Mp3File mp3File = new Mp3File(destination);
         track.setDuration(mp3File.getLengthInSeconds());
-        if(mp3File.hasId3v1Tag()){
-            ID3v1 id3v1Tag = mp3File.getId3v1Tag();
-            track.setArtist(id3v1Tag.getArtist());
-            track.setTitle(id3v1Tag.getTitle());
-            track.setAlbum(id3v1Tag.getAlbum());
+        if(mp3File.hasId3v2Tag()){
+            ID3v2 id3v2Tag = mp3File.getId3v2Tag();
+            String artist = id3v2Tag.getArtist();
+            String title = id3v2Tag.getTitle();
+            String album = id3v2Tag.getAlbum();
+
+            if(artist == null || artist.isEmpty()) {
+                throw new IllegalArgumentException("Artist field is missing");
+            }
+
+            if(title == null || title.isEmpty()) {
+                throw new IllegalArgumentException("Title field is missing");
+            }
+
+            track.setArtist(artist);
+            track.setTitle(title);
+            track.setAlbum(album);
         }
 
         return trackRepository.save(track);
