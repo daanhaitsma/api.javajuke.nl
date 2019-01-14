@@ -69,14 +69,7 @@ public class PlaylistController {
     @GetMapping(value = "/playlists/{id}/play")
     public void play(@PathVariable("id") long id){
         Playlist playlist = playlistService.getPlaylist(id);
-
-        Iterator<Track> trackIterator = playlist.getTracks().iterator();
-        Boolean trackFound = false;
-        while (trackIterator.hasNext() && !trackFound) {
-            Track track = trackIterator.next();
-            mediaplayerService.addToPlaylist(new File(track.getPath()));
-        }
-        mediaplayerService.playMusic();
+        mediaplayerService.playPlaylist(playlist);
     }
 
     private final MediaplayerService mediaplayerService;

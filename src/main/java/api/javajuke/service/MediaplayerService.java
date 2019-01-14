@@ -1,5 +1,7 @@
 package api.javajuke.service;
 
+import api.javajuke.data.model.Playlist;
+import api.javajuke.data.model.Track;
 import jaco.mp3.player.MP3Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.Console;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 @Service
 public class MediaplayerService {
@@ -14,8 +18,9 @@ public class MediaplayerService {
     @Autowired
     private Environment env;
 
+    Thread playerThread;
+
     MP3Player mp3Player;
-    PlayerThread player_thread;
     boolean isPlaying = false;
     boolean isPaused = false;
 
@@ -34,17 +39,26 @@ public class MediaplayerService {
     //Starts a new thread in which the mp3Player gets instantiated
     //If both booleans are false, the thread will start else it will start playing the current song
     public void playMusic() {
-        if (!isPlaying && !isPaused) {
-            player_thread = new PlayerThread();
-            player_thread.start();
-        } else if(isPlaying) {
-
-        }else
-        {
+        if(!isPlaying) {
             mp3Player.play();
             isPlaying = true;
             isPaused = false;
         }
+    }
+
+    public void playPlaylist(Playlist playlist) {
+        stopMusic();
+
+        Iterator<Track> trackIterator = playlist.getTracks().iterator();
+        ArrayList<File> files = new ArrayList<>();
+        while (trackIterator.hasNext()) {
+            Track track = trackIterator.next();
+            files.add(new File(track.getPath()));
+        }
+
+        Runnable playerRunnable = new PlayerRunnable(files.toArray(new File[files.size()]));
+        playerThread = new Thread(playerRunnable);
+        playerThread.start();
 
     }
 
@@ -64,7 +78,6 @@ public class MediaplayerService {
             mp3Player.stop();
             isPlaying = false;
             isPaused = false;
-            player_thread = null;
         }
     }
 
@@ -79,13 +92,19 @@ public class MediaplayerService {
     }
 
     //Shuffles the playlist
-    public void shuffle(){
-        if(mp3Player.isShuffle()){
+    public boolean getShuffle(){
+        return mp3Player.isShuffle();
+    }
+
+    //Shuffles the playlist
+    public void toggleShuffle(){
+        if(this.getShuffle()){
             mp3Player.setShuffle(true);
         }else{
             mp3Player.setShuffle(false);
         }
     }
+
     //Sets the volume of the mp3Player
     public void setVolume(int volume){
         mp3Player.setVolume(volume);
@@ -104,11 +123,23 @@ public class MediaplayerService {
         return mp3Player.getPosition();
     }
 
-    class PlayerThread extends Thread{
+    public int getVolume() {
+        mp3Player.skipBackward();
+        return mp3Player.getVolume();
+    }
+
+    class PlayerRunnable implements Runnable{
+
+        private File[] files;
+
+        public PlayerRunnable(File[] files) {
+            this.files = files;
+        }
+
         //Instantiates the mp3Player and plays the current song
         public void run(){
             try {
-                MediaplayerService.this.mp3Player = new MP3Player(new File[]{new File(env.getProperty("debug.song.path"))});
+                MediaplayerService.this.mp3Player = new MP3Player(files);
                 MediaplayerService.this.mp3Player.play();
                 isPlaying = true;
                 isPaused = false;
