@@ -69,8 +69,16 @@ public class TrackService {
             new File(uploadDirectory).mkdir();
         }
 
+        if(!file.getContentType().equals("audio/mpeg")) {
+            throw new IllegalArgumentException("Not an audio file");
+        }
+
         String fileName = file.getOriginalFilename();
         String filePath = uploadDirectory + fileName;
+
+        String extension = file.getContentType();
+
+        System.out.println("FILE TYPE: " + extension);
 
         File destination = new File(filePath);
 
