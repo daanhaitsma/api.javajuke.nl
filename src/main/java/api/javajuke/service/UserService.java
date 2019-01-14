@@ -31,14 +31,14 @@ public class UserService {
      * @param password the users password
      * @return the logged in users token
      */
-    public User loginUser(String email, String username, String password){
+    public User loginUser(String email, String username, String password) {
         User user = userRepository.findByUsernameOrEmail(username, email)
                 .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
 
-        if (BCrypt.checkpw(password, user.getPassword())){
+        if (BCrypt.checkpw(password, user.getPassword())) {
             user.setToken(UUID.randomUUID().toString());
             return userRepository.save(user);
-        }else{
+        } else {
             throw new EntityNotFoundException("Login credentials are incorrect.");
         }
     }
@@ -51,8 +51,8 @@ public class UserService {
      * @param password the password for the new user
      * @return the newly created user
      */
-    public User createUser(String email, String username, String password){
-        if(!userRepository.findByUsernameOrEmail(username, email).isPresent()) {
+    public User createUser(String email, String username, String password) {
+        if (!userRepository.findByUsernameOrEmail(username, email).isPresent()) {
             User newUser = new User(email, username, password);
 
             userRepository.save(newUser);
@@ -63,10 +63,10 @@ public class UserService {
 
     /**
      * Logs the currently logged in user out with the specified token.
-     * 
+     *
      * @param token the token of the user that wants to log out
      */
-    public void logoutUser(String token){
+    public void logoutUser(String token) {
         User user = userRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
 
@@ -74,14 +74,14 @@ public class UserService {
         userRepository.save(user);
     }
 
-<<<<<<< HEAD
     public User getUser(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found." ));
-=======
-    public User getUserByToken(String token){
-        return userRepository.findByToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
->>>>>>> develop
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found."));
+
     }
+        public User getUserByToken (String token){
+            return userRepository.findByToken(token)
+                    .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        }
 }
