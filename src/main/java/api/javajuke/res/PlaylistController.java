@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class PlaylistController {
+public class PlaylistController implements VersionController{
     private final PlaylistService playlistService;
 
     @Autowired
