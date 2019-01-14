@@ -58,7 +58,7 @@ public class MediaplayerController {
         mediaplayerService.toggleShuffle();
     }
 
-    @GetMapping("/repeat")
+    @PutMapping("/repeat")
     public void repeat(){
         mediaplayerService.setRepeat();
     }
