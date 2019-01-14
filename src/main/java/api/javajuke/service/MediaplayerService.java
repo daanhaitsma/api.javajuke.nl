@@ -67,16 +67,6 @@ public class MediaplayerService {
 
     }
 
-    //Checks if mp3Player is currently playing music
-    //If true the mp3Player will pause
-    public void pauseMusic(){
-        if(isPlaying){
-            mp3Player.pause();
-            isPlaying = false;
-            isPaused = true;
-        }
-    }
-
     //Stops the mp3Player and closes the thread
     public void stopMusic(){
         if(isPlaying || isPaused){
