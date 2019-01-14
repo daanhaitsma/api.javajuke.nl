@@ -78,4 +78,5 @@ public class UserService {
         return userRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
     }
+
 }

@@ -43,10 +43,10 @@ public class PlaylistController implements VersionController{
      * @return the newly created playlist as a json response
      */
     @PostMapping(value = "/playlists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Playlist create(@RequestParam Map<String, String> body) {
+    public Playlist create(@RequestParam Map<String, String> body, @RequestHeader(value = "X-Authorization") String token) {
         String name = body.get("name");
 
-        return playlistService.createPlaylist(name);
+        return playlistService.createPlaylist(name, token);
     }
 
     /**
@@ -75,8 +75,8 @@ public class PlaylistController implements VersionController{
      * Creates an endpoint that deletes a playlist with the specified id.
      */
     @DeleteMapping("/playlists/{id}")
-    public void delete(@PathVariable("id") long id) throws EntityNotFoundException {
-        playlistService.deletePlaylist(id);
+    public void delete(@RequestHeader(value = "X-Authorization") String token, @PathVariable("id") long id) throws EntityNotFoundException{
+        playlistService.deletePlaylist(id, token);
     }
 
     /**

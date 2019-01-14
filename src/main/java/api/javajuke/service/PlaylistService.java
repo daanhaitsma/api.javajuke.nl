@@ -1,12 +1,15 @@
 package api.javajuke.service;
 
 import api.javajuke.data.PlaylistRepository;
+import api.javajuke.data.UserRepository;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
+import api.javajuke.data.model.User;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,18 +18,23 @@ public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final TrackService trackService;
+    private final UserRepository userRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService, UserRepository userRepository) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
+        this.userRepository = userRepository;
     }
 
     public List<Playlist> getPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public Playlist createPlaylist(String name) {
-        Playlist playlist = new Playlist(name);
+    public Playlist createPlaylist(String name, String token) {
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        Playlist playlist = new Playlist(name, user);
 
         return playlistRepository.save(playlist);
     }
@@ -47,8 +55,15 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public void deletePlaylist(long id) {
+    public void deletePlaylist(long id, String token) {
         Playlist playlist = getPlaylist(id);
+
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        if(playlist.getUser().getId() != user.getId()) {
+            throw new BadRequestException("Wrong user");
+        }
 
         playlistRepository.delete(playlist);
     }
@@ -57,27 +72,36 @@ public class PlaylistService {
         Track track = trackService.getTrack(trackId);
 
         Playlist playlist = getPlaylist(id);
-        playlist.getTracks().add(track);
 
+        // Iterate over all the tracks in the playlist
+        for (Track playlistTrack : playlist.getTracks()) {
+            // If the track to be added is already found, don't add it again
+            if (playlistTrack.getId() == trackId) {
+                // Stop when the track is found, so as to not keep iterating unnecessarily
+                throw new BadRequestException("Track already exists in this playlist");
+            }
+        }
+
+        playlist.getTracks().add(track);
         return playlistRepository.save(playlist);
+
     }
 
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
         Playlist playlist = getPlaylist(id);
 
-        // Iterate over all the tracks
         Iterator<Track> trackIterator = playlist.getTracks().iterator();
-        Boolean trackFound = false;
-        while (trackIterator.hasNext() && !trackFound) {
+        // Iterate over all the tracks
+        while (trackIterator.hasNext()) {
             Track track = trackIterator.next();
             // If the track to be deleted is found, actually delete it
             if (track.getId() == trackId) {
                 trackIterator.remove();
                 // Stop when the track is found, so as to not keep iterating unnecessarily
-                trackFound = true;
+                return playlistRepository.save(playlist);
             }
         }
 
-        return playlistRepository.save(playlist);
+        throw new BadRequestException("Track doesn't exists in this playlist");
     }
 }
