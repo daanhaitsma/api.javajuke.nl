@@ -22,13 +22,8 @@ public class MediaplayerController {
         this.mediaplayerService = mediaplayerService;
     }
 
-    @PutMapping("/playmusic")
+    @PutMapping("/toggleplay")
     public void playMusic(){
-        mediaplayerService.playMusic();
-    }
-
-    @PutMapping("/pausemusic")
-    public void pauseMusic(){
         mediaplayerService.playMusic();
     }
 
