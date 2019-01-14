@@ -24,7 +24,7 @@ public class MediaplayerController {
 
     @PutMapping("/playmusic")
     public void playMusic(){
-        mediaplayerService.playMusic();;
+        mediaplayerService.playMusic();
     }
 
     @PutMapping("/pausemusic")
@@ -47,8 +47,8 @@ public class MediaplayerController {
         mediaplayerService.previousSong();
     }
 
-    @PutMapping("/shuffle")
-    public void setShuffle(){
+    @GetMapping("/shuffle")
+    public void getShuffle(){
         mediaplayerService.getShuffle();
     }
 
