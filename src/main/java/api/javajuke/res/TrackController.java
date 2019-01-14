@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class TrackController implements VersionController{
@@ -27,8 +28,8 @@ public class TrackController implements VersionController{
     }
 
     @GetMapping("/tracks")
-    public List<Track> index(@RequestParam("search") String search) {
-        if(!search.equals("")){
+    public List<Track> index(@RequestParam(value = "search", required = false) Optional<String> search) {
+        if(search.isPresent()){
             return trackService.getTracks(search);
         }
         return trackService.getTracks();
