@@ -67,9 +67,11 @@ public class TrackService {
     public Track createTrack(MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
         if(!new File(uploadDirectory).exists())
         {
+            // Create upload directory if it doesn't exist
             new File(uploadDirectory).mkdir();
         }
 
+        // Make sure the uploaded file is an audio file
         if(!file.getContentType().equals("audio/mpeg")) {
             throw new IllegalArgumentException("Not an audio file");
         }
@@ -85,6 +87,7 @@ public class TrackService {
         Mp3File mp3File = new Mp3File(destination);
         track.setDuration(mp3File.getLengthInSeconds());
         if(mp3File.hasId3v2Tag()){
+            // Check meta data
             ID3v2 id3v2Tag = mp3File.getId3v2Tag();
             String artist = id3v2Tag.getArtist();
             String title = id3v2Tag.getTitle();
