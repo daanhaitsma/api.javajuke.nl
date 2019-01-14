@@ -2,6 +2,7 @@ package api.javajuke.service;
 
 import api.javajuke.data.TrackRepository;
 import api.javajuke.data.model.Track;
+import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -76,10 +77,6 @@ public class TrackService {
         String fileName = file.getOriginalFilename();
         String filePath = uploadDirectory + fileName;
 
-        String extension = file.getContentType();
-
-        System.out.println("FILE TYPE: " + extension);
-
         File destination = new File(filePath);
 
         Track track = new Track(filePath);
@@ -94,11 +91,18 @@ public class TrackService {
             String album = id3v2Tag.getAlbum();
 
             if(artist == null || artist.isEmpty()) {
+                destination.delete();
                 throw new IllegalArgumentException("Artist field is missing");
             }
 
             if(title == null || title.isEmpty()) {
+                destination.delete();
                 throw new IllegalArgumentException("Title field is missing");
+            }
+
+            if(trackRepository.findByTitleAndArtist(title, artist).isPresent()) {
+                destination.delete();
+                throw new BadRequestException("Song already in library");
             }
 
             track.setArtist(artist);
