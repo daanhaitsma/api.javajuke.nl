@@ -21,7 +21,7 @@ public class MediaplayerController {
         return mediaplayerService.getPlayerState();
     }
 
-    @GetMapping("/playmusic")
+    @PutMapping("/toggleplay")
     public void playMusic(){
         mediaplayerService.playMusic();
     }
