@@ -10,8 +10,10 @@ import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PlaylistService {
@@ -42,6 +44,20 @@ public class PlaylistService {
     public Playlist getPlaylist(long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+    }
+
+    public Playlist getPlaylist(long id, String search){
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+
+        Set<Track> tracks = new HashSet<>();
+        for (Track item : playlist.getTracks()) {
+            if(item.getAlbum().contains(search) || item.getArtist().contains(search) || item.getTitle().contains(search)){
+                tracks.add(item);
+            }
+        }
+        playlist.setTracks(tracks);
+        return playlist;
     }
 
     public Playlist updatePlaylist(long id, String name) {

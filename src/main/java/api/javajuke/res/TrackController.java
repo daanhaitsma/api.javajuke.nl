@@ -27,7 +27,10 @@ public class TrackController implements VersionController{
     }
 
     @GetMapping("/tracks")
-    public List<Track> index() {
+    public List<Track> index(@RequestParam("search") String search) {
+        if(!search.equals("")){
+            return trackService.getTracks(search);
+        }
         return trackService.getTracks();
     }
 

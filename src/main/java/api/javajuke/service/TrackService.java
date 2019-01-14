@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import com.mpatric.mp3agic.*;
 
@@ -39,6 +40,25 @@ public class TrackService {
      */
     public List<Track> getTracks() {
         return trackRepository.findAll();
+    }
+
+    /**
+     * Returns a List object containing all tracks
+     * that are stored in the database.
+     *
+     * @param search the string to filter the list of tracks
+     * @return a list with all tracks
+     */
+    public List<Track> getTracks(String search) throws NullPointerException{
+        List<Track> tracks = trackRepository.findAll();
+
+        List<Track> filteredTracks = new ArrayList<>();
+        for (Track item : tracks) {
+            if(item.getTitle().contains(search) || item.getArtist().contains(search) || item.getAlbum().contains(search)){
+                filteredTracks.add(item);
+            }
+        }
+        return filteredTracks;
     }
 
     /**

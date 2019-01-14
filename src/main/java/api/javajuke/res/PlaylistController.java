@@ -55,7 +55,10 @@ public class PlaylistController implements VersionController{
      * @return the playlist as a json response
      */
     @GetMapping("/playlists/{id}")
-    public Playlist show(@PathVariable("id") long id) throws EntityNotFoundException {
+    public Playlist show(@PathVariable("id") long id, @RequestParam("search") String search) throws EntityNotFoundException {
+        if(!search.equals("")){
+            return playlistService.getPlaylist(id, search);
+        }
         return playlistService.getPlaylist(id);
     }
 
