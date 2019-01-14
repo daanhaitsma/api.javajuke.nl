@@ -22,39 +22,46 @@ public class MediaplayerController {
     }
 
     @PutMapping("/toggleplay")
-    public void playMusic(){
+    public PlayerState playMusic(){
         mediaplayerService.playMusic();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/stopmusic")
-    public void stopMusic(){
+    public PlayerState stopMusic(){
         mediaplayerService.stopMusic();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/nextsong")
-    public void nextSong(){
+    public PlayerState nextSong(){
         mediaplayerService.nextSong();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/previoussong")
-    public void previousSong(){
+    public PlayerState previousSong(){
         mediaplayerService.previousSong();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/shuffle")
-    public void toggleShuffle(){
+    public PlayerState toggleShuffle(){
         mediaplayerService.toggleShuffle();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/repeat")
-    public void repeat(){
+    public PlayerState repeat(){
         mediaplayerService.setRepeat();
+        return mediaplayerService.getPlayerState();
     }
 
     @PutMapping("/volume")
-    public void setVolume(@RequestBody MultiValueMap<String, String> body){
+    public PlayerState setVolume(@RequestBody MultiValueMap<String, String> body){
         String volume = body.getFirst("volume");
         mediaplayerService.setVolume(Integer.valueOf(volume));
+        return mediaplayerService.getPlayerState();
     }
     
     @GetMapping("/addsong")
