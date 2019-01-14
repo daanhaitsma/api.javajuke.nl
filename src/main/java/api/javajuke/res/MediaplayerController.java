@@ -22,32 +22,32 @@ public class MediaplayerController {
         this.mediaplayerService = mediaplayerService;
     }
 
-    @GetMapping("/playmusic")
+    @PutMapping("/playmusic")
     public void playMusic(){
         mediaplayerService.playMusic();;
     }
 
-    @GetMapping("/pausemusic")
+    @PutMapping("/pausemusic")
     public void pauseMusic(){
-        mediaplayerService.pauseMusic();
+        mediaplayerService.playMusic();
     }
 
-    @GetMapping("/stopmusic")
+    @PutMapping("/stopmusic")
     public void stopMusic(){
         mediaplayerService.stopMusic();
     }
 
-    @GetMapping("/nextsong")
+    @PutMapping("/nextsong")
     public void nextSong(){
         mediaplayerService.nextSong();
     }
 
-    @GetMapping("/previoussong")
+    @PutMapping("/previoussong")
     public void previousSong(){
         mediaplayerService.previousSong();
     }
 
-    @GetMapping("/shuffle")
+    @PutMapping("/shuffle")
     public void setShuffle(){
         mediaplayerService.getShuffle();
     }

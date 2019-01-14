@@ -44,6 +44,11 @@ public class MediaplayerService {
             isPlaying = true;
             isPaused = false;
         }
+        else{
+            mp3Player.pause();
+            isPlaying = false;
+            isPaused = true;
+        }
     }
 
     public void playPlaylist(Playlist playlist) {
@@ -135,6 +140,10 @@ public class MediaplayerService {
         else {
             mp3Player.setRepeat(true);
         }
+    }
+
+    public boolean getRepeat(){
+        return mp3Player.isRepeat();
     }
 
     class PlayerRunnable implements Runnable{
