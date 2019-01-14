@@ -57,6 +57,11 @@ public class MediaplayerController {
         mediaplayerService.toggleShuffle();
     }
 
+    @GetMapping("/repeat")
+    public void repeat(){
+        mediaplayerService.setRepeat();
+    }
+
     @PutMapping("/volume")
     public void setVolume(@RequestBody MultiValueMap<String, String> body){
         String volume = body.getFirst("volume");

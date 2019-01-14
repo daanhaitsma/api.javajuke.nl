@@ -111,7 +111,7 @@ public class MediaplayerService {
     }
 
     public void addSong(){
-        mp3Player.add(new File("C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/Cage The Elephant - Trouble.mp3"));
+        mp3Player.add(new File(env.getProperty("debug.song.path2")));
     }
 
     //Adds a song to the playlist
@@ -126,6 +126,15 @@ public class MediaplayerService {
     public int getVolume() {
         mp3Player.skipBackward();
         return mp3Player.getVolume();
+    }
+    
+    public void setRepeat(){
+        if(mp3Player.isRepeat()){
+            mp3Player.setRepeat(false);
+        }
+        else {
+            mp3Player.setRepeat(true);
+        }
     }
 
     class PlayerRunnable implements Runnable{
@@ -153,4 +162,3 @@ public class MediaplayerService {
         }
     }
 }
-
