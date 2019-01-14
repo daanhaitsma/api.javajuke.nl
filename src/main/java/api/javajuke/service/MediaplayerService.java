@@ -22,15 +22,6 @@ public class MediaplayerService {
     Thread playerThread;
 
     MP3Player mp3Player;
-    boolean isPlaying = false;
-    boolean isPaused = false;
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-    public boolean isPaused() {
-        return isPaused;
-    }
 
     public MediaplayerService(){
 
@@ -42,23 +33,19 @@ public class MediaplayerService {
                 this.getVolume(),
                 this.getShuffle(),
                 this.getRepeat(),
-                this.isPlaying(),
-                this.isPaused());
+                this.mp3Player.isPlaying(),
+                this.mp3Player.isPaused());
     }
 
     //Checks if the mp3Player is playing or paused
     //Starts a new thread in which the mp3Player gets instantiated
     //If both booleans are false, the thread will start else it will start playing the current song
     public void playMusic() {
-        if(!isPlaying) {
+        if(!mp3Player.isPlaying()) {
             mp3Player.play();
-            isPlaying = true;
-            isPaused = false;
         }
         else{
             mp3Player.pause();
-            isPlaying = false;
-            isPaused = true;
         }
     }
 
@@ -80,10 +67,8 @@ public class MediaplayerService {
 
     //Stops the mp3Player and closes the thread
     public void stopMusic(){
-        if(isPlaying || isPaused){
+        if(mp3Player.isPlaying() || mp3Player.isPaused()){
             mp3Player.stop();
-            isPlaying = false;
-            isPaused = false;
         }
     }
 
@@ -159,8 +144,6 @@ public class MediaplayerService {
             try {
                 MediaplayerService.this.mp3Player = new MP3Player(files);
                 MediaplayerService.this.mp3Player.play();
-                isPlaying = true;
-                isPaused = false;
                 //Waits till the song has ended and puts the thread to sleep
                 while(!MediaplayerService.this.mp3Player.isStopped()){
                     Thread.sleep(5000);
