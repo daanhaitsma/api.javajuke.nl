@@ -1,5 +1,6 @@
 package api.javajuke.service;
 
+import api.javajuke.data.model.PlayerState;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
 import jaco.mp3.player.MP3Player;
@@ -33,6 +34,16 @@ public class MediaplayerService {
 
     public MediaplayerService(){
 
+    }
+
+    public PlayerState getPlayerState() {
+        return new PlayerState(
+                this.getPosition(),
+                this.getVolume(),
+                this.getShuffle(),
+                this.getRepeat(),
+                this.isPlaying(),
+                this.isPaused());
     }
 
     //Checks if the mp3Player is playing or paused
@@ -94,9 +105,9 @@ public class MediaplayerService {
     //Shuffles the playlist
     public void toggleShuffle(){
         if(this.getShuffle()){
-            mp3Player.setShuffle(true);
-        }else{
             mp3Player.setShuffle(false);
+        }else{
+            mp3Player.setShuffle(true);
         }
     }
 
@@ -119,7 +130,6 @@ public class MediaplayerService {
     }
 
     public int getVolume() {
-        mp3Player.skipBackward();
         return mp3Player.getVolume();
     }
     

@@ -1,5 +1,6 @@
 package api.javajuke.res;
 
+import api.javajuke.data.model.PlayerState;
 import api.javajuke.data.model.Position;
 import api.javajuke.data.model.Volume;
 import api.javajuke.exception.BadRequestException;
@@ -22,7 +23,12 @@ public class MediaplayerController {
         this.mediaplayerService = mediaplayerService;
     }
 
-    @PutMapping("/toggleplay")
+    @GetMapping("/playerstate")
+    public PlayerState getPlayerState(){
+        return mediaplayerService.getPlayerState();
+    }
+
+    @GetMapping("/playmusic")
     public void playMusic(){
         mediaplayerService.playMusic();
     }
