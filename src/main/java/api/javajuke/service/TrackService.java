@@ -8,11 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.util.List;
 import com.mpatric.mp3agic.*;
+
+import javax.imageio.ImageIO;
 
 @Service
 public class TrackService {
@@ -93,6 +94,8 @@ public class TrackService {
             String title = id3v2Tag.getTitle();
             String album = id3v2Tag.getAlbum();
 
+            byte[] imageData = id3v2Tag.getAlbumImage();
+
             if(artist == null || artist.isEmpty()) {
                 destination.delete();
                 throw new IllegalArgumentException("Artist field is missing");
@@ -106,6 +109,48 @@ public class TrackService {
             if(trackRepository.findByTitleAndArtist(title, artist).isPresent()) {
                 destination.delete();
                 throw new BadRequestException("Song already in library");
+            }
+
+            if (imageData != null) {
+
+                if(!new File(uploadDirectory + "/albumcover").exists())
+                {
+                    // Create upload directory if it doesn't exist
+                    new File(uploadDirectory + "/albumcover").mkdir();
+                }
+
+                String imageMimeType = id3v2Tag.getAlbumImageMimeType();
+                String imageExtension;
+
+                switch (imageMimeType) {
+                    case "image/png":
+                        imageExtension = ".png";
+                        break;
+                    default:
+                        imageExtension = ".jpg";
+                        break;
+                }
+
+                File albumFolder = new File(uploadDirectory + "/albumcover");
+                File listOfAlbumCovers[] = albumFolder.listFiles();
+
+                String albumCoverImageName = artist + album + imageExtension;
+
+                boolean albumCoverImageFound = false;
+                for (File fileLoop : listOfAlbumCovers) {
+                    if (fileLoop.isFile() && fileLoop.getName().equals(albumCoverImageName)) {
+                        System.out.println(fileLoop.getName() + " already exists, I'm not adding this image");
+                        albumCoverImageFound = true;
+                    }
+                }
+
+                if(!albumCoverImageFound) {
+                    String albumCoverPath = uploadDirectory + "/albumcover/" + albumCoverImageName;
+
+                    RandomAccessFile albumCover = new RandomAccessFile(albumCoverPath, "rw");
+                    albumCover.write(imageData);
+                    albumCover.close();
+                }
             }
 
             track.setArtist(artist);
