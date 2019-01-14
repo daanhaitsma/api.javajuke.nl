@@ -9,13 +9,25 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 
-public class RestEndpointTests extends FunctionalTest{
+public class UserFunctionalTest extends FunctionalTest{
 
     private String token;
 
     //User control
+
     @Test
-    public void checkLogin(){
+    public void testRegister() {
+        given()
+                .param("email", "123")
+                .param("username", "123")
+                .param("password", "123")
+                .post("/register")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    public void testLogin(){
         given()
                 .param("email", "123")
                 .param("username", "123")
@@ -26,7 +38,7 @@ public class RestEndpointTests extends FunctionalTest{
     }
 
     @Test
-    public void login()
+    public void testGetLoginToken()
     {
         token = given()
                 .param("email", "123")
