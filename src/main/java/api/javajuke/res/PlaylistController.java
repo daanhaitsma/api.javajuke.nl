@@ -1,5 +1,6 @@
 package api.javajuke.res;
 
+import api.javajuke.data.model.PlayerState;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RestController
 public class PlaylistController {
     private final PlaylistService playlistService;
+    private final MediaplayerService mediaplayerService;
 
     @Autowired
     public PlaylistController(PlaylistService playlistService, MediaplayerService mediaplayerService)
@@ -67,11 +69,10 @@ public class PlaylistController {
     }
 
     @PutMapping(value = "/playlists/{id}/play")
-    public void play(@PathVariable("id") long id){
+    public PlayerState play(@PathVariable("id") long id){
         Playlist playlist = playlistService.getPlaylist(id);
         mediaplayerService.playPlaylist(playlist);
+        return mediaplayerService.getPlayerState();
     }
-
-    private final MediaplayerService mediaplayerService;
 
 }
