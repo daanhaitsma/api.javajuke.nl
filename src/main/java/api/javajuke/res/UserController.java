@@ -10,7 +10,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class UserController {
+public class UserController implements VersionController {
     private final UserService userService;
 
     /**

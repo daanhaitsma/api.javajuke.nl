@@ -1,5 +1,6 @@
 package api.javajuke.res;
 
+import api.javajuke.data.annotation.ApiVersion;
 import api.javajuke.data.model.Track;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.TrackService;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-public class TrackController {
+public class TrackController implements VersionController{
 
     private final TrackService trackService;
 
