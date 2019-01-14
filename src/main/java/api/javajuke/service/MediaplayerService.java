@@ -92,7 +92,7 @@ public class MediaplayerService {
     }
 
     public void addSong(){
-        mp3Player.add(new File("C:/Users/viper/IdeaProjects/api.javajuke.nl/resource/Cage The Elephant - Trouble.mp3"));
+        mp3Player.add(new File(env.getProperty("debug.song.path2")));
     }
 
     //Adds a song to the playlist
@@ -102,6 +102,15 @@ public class MediaplayerService {
 
     public int getPosition() {
         return mp3Player.getPosition();
+    }
+
+    public void setRepeat(){
+        if(mp3Player.isRepeat()){
+            mp3Player.setRepeat(false);
+        }
+        else {
+            mp3Player.setRepeat(true);
+        }
     }
 
     class PlayerThread extends Thread{
@@ -122,4 +131,3 @@ public class MediaplayerService {
         }
     }
 }
-
