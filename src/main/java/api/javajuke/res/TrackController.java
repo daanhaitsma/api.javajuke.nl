@@ -6,12 +6,15 @@ import api.javajuke.service.TrackService;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -36,8 +39,12 @@ public class TrackController implements VersionController{
      * @return all tracks as a json response
      */
     @GetMapping("/tracks")
-    public List<Track> index() {
-        return trackService.getTracks();
+    public ResponseEntity index() {
+        List<Track> tracks = trackService.getTracks();
+        HashMap<String, List<Track>> map = new HashMap<>();
+        map.put("data", tracks);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**
