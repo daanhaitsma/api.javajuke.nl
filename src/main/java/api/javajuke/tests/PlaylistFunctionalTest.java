@@ -1,16 +1,54 @@
 package api.javajuke.tests;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static com.jayway.restassured.RestAssured.given;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PlaylistFunctionalTest extends FunctionalTest {
 
-    String token = "961b48c2-80dd-4205-8ebf-ea56aecf6d1d";
-    String playlistId;
+    private static String token;
+    private static String playlistId;
 
     @Test
-    public void testGetPlaylists() {
+    public void aTestRegister() {
+        given()
+                .param("email", "playlist@playlist.nl")
+                .param("username", "playlist")
+                .param("password", "playlist")
+                .post("/register")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    public void bTestLogin(){
+        given()
+                .param("email", "playlist@playlist.nl")
+                .param("username", "playlist")
+                .param("password", "playlist")
+                .post("/login")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    public void cTestGetLoginToken() {
+        token = given()
+                .param("email", "playlist@playlist.nl")
+                .param("username", "playlist")
+                .param("password", "playlist")
+                .post("/login")
+                .jsonPath().getString("token");
+    }
+
+    @Test
+    public void dTestGetPlaylists() {
+        System.out.println(token);
         given()
                 .header("X-Authorization", token)
                 .get("/playlists")
@@ -19,19 +57,19 @@ public class PlaylistFunctionalTest extends FunctionalTest {
     }
 
     @Test
-    public void testCreatePlaylist() {
+    public void eTestCreatePlaylist() {
         playlistId = given()
                 .header("X-Authorization", token)
-                .param("name", "test")
+                .param("name", "Test Playlist")
                 .post("/playlists")
                 .then()
                 .statusCode(200)
                 .extract()
-                .path("id");
+                .path("id").toString();
     }
 
     @Test
-    public void testGetPlaylist() {
+    public void fTestGetPlaylist() {
         given()
                 .header("X-Authorization", token)
                 .get("/playlists/" + playlistId)
@@ -40,22 +78,24 @@ public class PlaylistFunctionalTest extends FunctionalTest {
     }
 
     @Test
-    public void testUpdatePlaylist() {
+    public void gTestUpdatePlaylist() {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("name", "Updated Test");
+
         given()
                 .header("X-Authorization", token)
-                .param("name", "updatedTest")
+                .formParam("name", "updatedTest")
                 .put("/playlists/" + playlistId)
                 .then()
                 .statusCode(200);
     }
 
     @Test
-    public void testDeletePlaylist() {
+    public void hTestDeletePlaylist() {
         given()
                 .header("X-Authorization", token)
                 .delete("/playlists/" + playlistId)
                 .then()
                 .statusCode(200);
     }
-
 }
