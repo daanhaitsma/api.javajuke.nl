@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Console;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 @Service
 public class MediaplayerService {
@@ -22,6 +21,11 @@ public class MediaplayerService {
     Thread playerThread;
 
     MP3Player mp3Player;
+
+    Set<Track> trackList;
+    Set<Track> originalTrackList;
+
+    boolean isShuffled = false;
 
     public MediaplayerService(){
 
@@ -34,7 +38,10 @@ public class MediaplayerService {
                 this.getShuffle(),
                 this.getRepeat(),
                 this.mp3Player.isPlaying(),
-                this.mp3Player.isPaused());
+                this.mp3Player.isPaused(),
+                this.getCurrentTrack(),
+                this.getTracklist());
+
     }
 
     //Checks if the mp3Player is playing or paused
@@ -50,19 +57,26 @@ public class MediaplayerService {
     }
 
     public void playPlaylist(Playlist playlist) {
+        trackList = playlist.getTracks();
+        originalTrackList = trackList;
+        playTrackList(playlist.getTracks());
+    }
 
-
-        Iterator<Track> trackIterator = playlist.getTracks().iterator();
+    public void playTrackList(Set<Track> trackList) {
+        if (mp3Player != null) {
+            mp3Player.stop();
+        }
+        Iterator<Track> trackIterator = trackList.iterator();
         ArrayList<File> files = new ArrayList<>();
         while (trackIterator.hasNext()) {
             Track track = trackIterator.next();
             files.add(new File(track.getPath()));
         }
 
-        Runnable playerRunnable = new PlayerRunnable(files.toArray(new File[files.size()]));
+        mp3Player = new MP3Player(files.toArray(new File[files.size()]));
+        Runnable playerRunnable = new PlayerRunnable();
         playerThread = new Thread(playerRunnable);
         playerThread.start();
-
     }
 
     //Stops the mp3Player and closes the thread
@@ -84,16 +98,27 @@ public class MediaplayerService {
 
     //Shuffles the playlist
     public boolean getShuffle(){
-        return mp3Player.isShuffle();
+        return isShuffled;
     }
 
     //Shuffles the playlist
     public void toggleShuffle(){
-        if(this.getShuffle()){
-            mp3Player.setShuffle(false);
+        if(this.isShuffled){
+            // Is currently shuffled; reset
+            trackList = originalTrackList;
         }else{
-            mp3Player.setShuffle(true);
+            // Not currently shuffled; shuffle
+
+            // Convert Set to List
+            List<Track> trackListList = new ArrayList<>(trackList);
+            // Shuffle List
+            Collections.shuffle(trackListList);
+            // Convert List back to Set
+            trackList = new LinkedHashSet<>(trackListList);
         }
+
+        isShuffled = !isShuffled;
+        playTrackList(trackList);
     }
 
     //Sets the volume of the mp3Player
@@ -131,18 +156,22 @@ public class MediaplayerService {
         return mp3Player.isRepeat();
     }
 
+    public Track getCurrentTrack() {
+        List<Track> trackListList = new ArrayList<>(trackList);
+        return trackListList.get(mp3Player.getPlayingIndex());
+    }
+
+    public Set<Track> getTracklist() {
+        return trackList;
+    }
+
     class PlayerRunnable implements Runnable{
 
         private File[] files;
 
-        public PlayerRunnable(File[] files) {
-            this.files = files;
-        }
-
         //Instantiates the mp3Player and plays the current song
         public void run(){
             try {
-                MediaplayerService.this.mp3Player = new MP3Player(files);
                 MediaplayerService.this.stopMusic();
                 MediaplayerService.this.mp3Player.play();
                 //Waits till the song has ended and puts the thread to sleep

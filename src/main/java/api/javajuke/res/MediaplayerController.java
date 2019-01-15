@@ -1,10 +1,13 @@
 package api.javajuke.res;
 
 import api.javajuke.data.model.PlayerState;
+import api.javajuke.data.model.Track;
 import api.javajuke.service.MediaplayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 
 @CrossOrigin
 @RestController
@@ -63,10 +66,15 @@ public class MediaplayerController {
         mediaplayerService.setVolume(Integer.valueOf(volume));
         return mediaplayerService.getPlayerState();
     }
-    
+
     @GetMapping("/addsong")
     public void addSong(){
         mediaplayerService.addSong();
+    }
+
+    @GetMapping("/current")
+    public Track getCurrentTrack(){
+        return mediaplayerService.getCurrentTrack();
     }
 
 }
