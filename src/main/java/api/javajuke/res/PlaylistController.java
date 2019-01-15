@@ -5,10 +5,13 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +36,12 @@ public class PlaylistController implements VersionController{
      * @return all playlists as a json response
      */
     @GetMapping("/playlists")
-    public List<Playlist> show() {
-        return playlistService.getPlaylists();
+    public ResponseEntity show() {
+        List<Playlist> playlists = playlistService.getPlaylists();
+        HashMap<String, List<Playlist>> map = new HashMap<>();
+        map.put("data", playlists);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**
