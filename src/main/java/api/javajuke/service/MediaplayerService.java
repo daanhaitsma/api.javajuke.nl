@@ -7,8 +7,6 @@ import jaco.mp3.player.MP3Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
-import java.io.Console;
 import java.io.File;
 import java.util.*;
 
@@ -18,54 +16,64 @@ public class MediaplayerService {
     @Autowired
     private Environment env;
 
-    Thread playerThread;
+    private final TrackService trackService;
 
-    MP3Player mp3Player;
+    private MP3Player mp3Player;
+    private Set<Track> trackList;
+    private Set<Track> originalTrackList;
+    private boolean isShuffled = false;
 
-    Set<Track> trackList;
-    Set<Track> originalTrackList;
-
-    boolean isShuffled = false;
-
-    public MediaplayerService(){
-
+    @Autowired
+    public MediaplayerService(TrackService trackService)
+    {
+        this.trackService = trackService;
     }
 
     public PlayerState getPlayerState() {
         return new PlayerState(
-                this.getPosition(),
-                this.getVolume(),
-                this.getShuffle(),
-                this.getRepeat(),
-                this.mp3Player.isPlaying(),
-                this.mp3Player.isPaused(),
-                this.getCurrentTrack(),
-                this.getTracklist());
+                mp3Player.getPosition(),
+                mp3Player.getVolume(),
+                isShuffled,
+                mp3Player.isRepeat(),
+                mp3Player.isPlaying(),
+                mp3Player.isPaused(),
+                getCurrentTrack(),
+                trackList);
 
     }
 
-    //Checks if the mp3Player is playing or paused
-    //Starts a new thread in which the mp3Player gets instantiated
-    //If both booleans are false, the thread will start else it will start playing the current song
-    public void playMusic() {
-        if(!mp3Player.isPlaying()) {
+    public void togglePlay() {
+        if (mp3Player.isPlaying()) {
+            // Currently playing; pause
+            mp3Player.pause();
+        }
+        else {
+            // Currently paused; play
             mp3Player.play();
         }
-        else{
-            mp3Player.pause();
+    }
+
+    public void stopMusic() {
+        if (mp3Player.isPlaying()) {
+            mp3Player.stop();
         }
     }
 
     public void playPlaylist(Playlist playlist) {
+        // Store the playlist tracks as both the new and original trackList
         trackList = playlist.getTracks();
         originalTrackList = trackList;
-        playTrackList(playlist.getTracks());
+        // Play the given playlist
+        playTrackList();
     }
 
-    public void playTrackList(Set<Track> trackList) {
+    private void playTrackList() {
+        // If a track is currently playing, stop it
         if (mp3Player != null) {
             mp3Player.stop();
         }
+
+        // Iterate over the tracklist, adding them to the mp3player
         Iterator<Track> trackIterator = trackList.iterator();
         ArrayList<File> files = new ArrayList<>();
         while (trackIterator.hasNext()) {
@@ -73,42 +81,38 @@ public class MediaplayerService {
             files.add(new File(track.getPath()));
         }
 
+        // Create the mp3player
         mp3Player = new MP3Player(files.toArray(new File[files.size()]));
-        Runnable playerRunnable = new PlayerRunnable();
-        playerThread = new Thread(playerRunnable);
+
+        // Start a new thread which will play the music
+        Runnable playerRunnable = new PlayerRunnable(mp3Player);
+        Thread playerThread = new Thread(playerRunnable);
         playerThread.start();
     }
 
-    //Stops the mp3Player and closes the thread
-    public void stopMusic(){
-        if(mp3Player.isPlaying() || mp3Player.isPaused()){
-            mp3Player.stop();
-        }
-    }
-
-    //Plays the next song on the playlist
-    public void nextSong(){
-        playMusic();
+    // Plays the next song in the tracklist
+    public void nextSong() {
+        mp3Player.play();
         mp3Player.skipForward();
     }
 
-    //Plays the previous song on the playlist
-    public void previousSong(){
-        playMusic();
+    // Plays the previous song in the tracklist
+    public void previousSong() {
+        mp3Player.play();
         mp3Player.skipBackward();
     }
 
-    //Shuffles the playlist
-    public boolean getShuffle(){
-        return isShuffled;
+    public void addTrackToQueue(long trackID) {
+        Track track = trackService.getTrack(trackID);
+        trackList.add(track);
     }
 
-    //Shuffles the playlist
-    public void toggleShuffle(){
-        if(this.isShuffled){
+    // Shuffles the playlist
+    public void toggleShuffle() {
+        if (isShuffled) {
             // Is currently shuffled; reset
             trackList = originalTrackList;
-        }else{
+        } else {
             // Not currently shuffled; shuffle
 
             // Convert Set to List
@@ -120,42 +124,21 @@ public class MediaplayerService {
         }
 
         isShuffled = !isShuffled;
-        playTrackList(trackList);
+        // Play the new tracklist
+        playTrackList();
     }
 
-    //Sets the volume of the mp3Player
-    public void setVolume(int volume){
+    // Sets the volume of the mp3Player
+    public void setVolume(int volume) {
         mp3Player.setVolume(volume);
     }
-
-    public void addSong(){
-        mp3Player.add(new File(env.getProperty("debug.song.path2")));
-    }
-
-    //Adds a song to the playlist
-    public void addToPlaylist(File file){
-        mp3Player.add(file);
-    }
-
-    public int getPosition() {
-        return mp3Player.getPosition();
-    }
-
-    public int getVolume() {
-        return mp3Player.getVolume();
-    }
     
-    public void setRepeat(){
-        if(mp3Player.isRepeat()){
+    public void toggleRepeat() {
+        if (mp3Player.isRepeat()) {
             mp3Player.setRepeat(false);
-        }
-        else {
+        } else {
             mp3Player.setRepeat(true);
         }
-    }
-
-    public boolean getRepeat(){
-        return mp3Player.isRepeat();
     }
 
     public Track getCurrentTrack() {
@@ -163,21 +146,21 @@ public class MediaplayerService {
         return trackListList.get(mp3Player.getPlayingIndex());
     }
 
-    public Set<Track> getTracklist() {
-        return trackList;
-    }
-
     class PlayerRunnable implements Runnable{
 
-        private File[] files;
+        private MP3Player mp3Player;
 
-        //Instantiates the mp3Player and plays the current song
+        public PlayerRunnable(MP3Player mp3Player) {
+            this.mp3Player = mp3Player;
+        }
+
+        // Instantiates the mp3Player and plays the current song
         public void run(){
             try {
-                MediaplayerService.this.stopMusic();
-                MediaplayerService.this.mp3Player.play();
-                //Waits till the song has ended and puts the thread to sleep
-                while(!MediaplayerService.this.mp3Player.isStopped()){
+                mp3Player.stop();
+                mp3Player.play();
+                // Keeps the thread active until the player has finished
+                while(!mp3Player.isStopped()){
                     Thread.sleep(5000);
                 }
             }catch(Exception e) {
