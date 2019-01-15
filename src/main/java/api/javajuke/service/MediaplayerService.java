@@ -74,11 +74,13 @@ public class MediaplayerService {
 
     //Plays the next song on the playlist
     public void nextSong(){
+        playMusic();
         mp3Player.skipForward();
     }
 
     //Plays the previous song on the playlist
     public void previousSong(){
+        playMusic();
         mp3Player.skipBackward();
     }
 
@@ -144,7 +146,7 @@ public class MediaplayerService {
             try {
                 MediaplayerService.this.mp3Player = new MP3Player(files);
                 MediaplayerService.this.stopMusic();
-                MediaplayerService.this.playMusic();
+                MediaplayerService.this.mp3Player.play();
                 //Waits till the song has ended and puts the thread to sleep
                 while(!MediaplayerService.this.mp3Player.isStopped()){
                     Thread.sleep(5000);
