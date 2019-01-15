@@ -3,20 +3,15 @@ package api.javajuke.tests;
 import static org.hamcrest.Matchers.greaterThan;
 
 import org.junit.Test;
-
-
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.DEFAULT)
-public class RestEndpointTests extends FunctionalTest{
+public class UserFunctionalTest extends FunctionalTest{
 
     private String token;
-
-    //User control
 
     @Test
     public void testRegister() {
