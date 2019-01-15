@@ -3,14 +3,9 @@ package api.javajuke.data.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-<<<<<<< HEAD
-=======
 import lombok.Getter;
 import lombok.Setter;
->>>>>>> develop
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.lang.Nullable;
-
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.HashSet;
