@@ -37,7 +37,7 @@ public class PlaylistController implements VersionController{
      * @return all playlists as a json response
      */
     @GetMapping("/playlists")
-    public ResponseEntity show() {
+    public ResponseEntity index() {
         List<Playlist> playlists = playlistService.getPlaylists();
         HashMap<String, List<Playlist>> map = new HashMap<>();
         map.put("data", playlists);

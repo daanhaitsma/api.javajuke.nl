@@ -10,8 +10,7 @@ import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PlaylistService {
@@ -69,6 +68,14 @@ public class PlaylistService {
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
     }
 
+    /**
+     * Gets a playlist with the specified id and filters the playlists
+     * tracks based on the specified search query.
+     *
+     * @param id the playlists id to get
+     * @param search the search query to search for
+     * @return the playlist with filtered tracks based on the search query
+     */
     public Playlist getPlaylist(long id, Optional<String> search){
         Playlist playlist = playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
@@ -76,10 +83,12 @@ public class PlaylistService {
 
         Set<Track> tracks = new HashSet<>();
         for (Track item : playlist.getTracks()) {
+            // Check for each track if it matches the search criteria
             if(item.getAlbum().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
                 tracks.add(item);
             }
         }
+        // Update the playlist tracks with the filtered tracks
         playlist.setTracks(tracks);
         return playlist;
     }

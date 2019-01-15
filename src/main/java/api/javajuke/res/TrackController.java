@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +41,20 @@ public class TrackController implements VersionController{
      * @return all tracks as a json response
      */
     @GetMapping("/tracks")
-    public ResponseEntity index() {
-        List<Track> tracks = trackService.getTracks();
+    public ResponseEntity index(@RequestParam(value = "search", required = false) Optional<String> search) {
+        List<Track> tracks;
+        if(search.isPresent()){
+            tracks = trackService.getTracks(search);
+        } else {
+            tracks = trackService.getTracks();
+        }
+
         HashMap<String, List<Track>> map = new HashMap<>();
         map.put("data", tracks);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
 
     /**
      * Creates an endpoint that shows a track with the specified id.

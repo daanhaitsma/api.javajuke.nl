@@ -45,8 +45,8 @@ public class TrackService {
     }
 
     /**
-     * Returns a List object containing all tracks
-     * that are stored in the database.
+     * Returns a List object containing all tracks that are stored in the database and filters
+     * out tracks based on the specified search query.     *
      *
      * @param search the string to filter the list of tracks
      * @return a list with all tracks
