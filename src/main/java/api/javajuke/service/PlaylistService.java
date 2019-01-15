@@ -9,6 +9,7 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +67,21 @@ public class PlaylistService {
     public Playlist getPlaylist(long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+    }
+
+    public Playlist getPlaylist(long id, Optional<String> search){
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+        String searchInput = search.get();
+
+        Set<Track> tracks = new HashSet<>();
+        for (Track item : playlist.getTracks()) {
+            if(item.getAlbum().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
+                tracks.add(item);
+            }
+        }
+        playlist.setTracks(tracks);
+        return playlist;
     }
 
     /**
