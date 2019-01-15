@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class TrackService {
         List<Track> filteredTracks = new ArrayList<>();
         for (Track item : tracks) {
             if(item.getTitle() != null && item.getArtist() != null && item.getAlbum() != null){
-                if(item.getTitle().contains(searchInput) || item.getArtist().contains(searchInput) || item.getAlbum().contains(searchInput)){
+                if(item.getTitle().contains(searchInput) || item.getArtist().contains(searchInput) || item.getAlbum().getName().contains(searchInput)){
                     filteredTracks.add(item);
                 }
             }
@@ -201,7 +202,7 @@ public class TrackService {
         File file = new File(filePath);
 
         if (!file.delete()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("TEST");
         }
 
         trackRepository.delete(track);

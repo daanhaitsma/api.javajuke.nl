@@ -84,7 +84,7 @@ public class PlaylistService {
         Set<Track> tracks = new HashSet<>();
         for (Track item : playlist.getTracks()) {
             // Check for each track if it matches the search criteria
-            if(item.getAlbum().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
+            if(item.getAlbum().getName().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
                 tracks.add(item);
             }
         }

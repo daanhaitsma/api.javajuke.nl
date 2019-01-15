@@ -46,4 +46,9 @@ public class Track {
     public Track(String path) {
         this.path = path;
     }
+
+    public Album getAlbum() {
+        return album;
+    }
+
 }

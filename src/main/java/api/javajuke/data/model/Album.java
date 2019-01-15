@@ -20,7 +20,7 @@ public class Album {
 
     @OneToMany(
             mappedBy = "album",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.PERSIST
     )
     private List<Track> tracks;
 
