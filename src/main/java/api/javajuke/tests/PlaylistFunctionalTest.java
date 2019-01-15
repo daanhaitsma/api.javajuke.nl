@@ -98,4 +98,13 @@ public class PlaylistFunctionalTest extends FunctionalTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    public void iTestDeleteUser() {
+        given()
+                .header("X-Authorization", token)
+                .delete("/users")
+                .then()
+                .statusCode(200);
+    }
 }
