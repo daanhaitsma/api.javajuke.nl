@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -20,8 +22,10 @@ public class Track {
     @Nullable
     private String artist;
     private long duration;
-    @Nullable
-    private String album;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
 
     @JsonBackReference
     @ManyToMany(
@@ -59,10 +63,6 @@ public class Track {
 
     public void setArtist(String artist) { this.artist = artist; }
 
-    public String getAlbum() { return album; }
-
-    public void setAlbum(String album) { this.album = album; }
-
     public String getPath() {
         return path;
     }
@@ -77,5 +77,13 @@ public class Track {
 
     public void setPlaylists(Set<Playlist> playlists) {
         this.playlists = playlists;
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
     }
 }

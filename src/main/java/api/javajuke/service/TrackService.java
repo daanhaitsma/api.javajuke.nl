@@ -155,7 +155,6 @@ public class TrackService {
 
             track.setArtist(artist);
             track.setTitle(title);
-            track.setAlbum(album);
         }
 
         return trackRepository.save(track);
