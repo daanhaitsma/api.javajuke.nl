@@ -1,9 +1,11 @@
 package api.javajuke.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -14,32 +16,28 @@ import java.util.Set;
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-public class Track {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String path;
+    private String email;
+    private String username;
+    @JsonIgnore
+    private String password;
     @Nullable
-    private String title;
-    @Nullable
-    private String artist;
-    private long duration;
-    @Nullable
-    private String album;
-
+    private String token;
     @JsonBackReference
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "tracks")
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
     private Set<Playlist> playlists = new HashSet<>();
 
-    public Track() {}
+    public User(){ }
 
-    public Track(String path) {
-        this.path = path;
+    public User(String email, String username, String password){
+        this.email = email;
+        this.username = username;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }
