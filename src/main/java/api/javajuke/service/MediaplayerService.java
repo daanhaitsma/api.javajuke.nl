@@ -144,7 +144,7 @@ public class MediaplayerService {
             try {
                 MediaplayerService.this.mp3Player = new MP3Player(files);
                 MediaplayerService.this.stopMusic();
-                MediaplayerService.this.mp3Player.play();
+                MediaplayerService.this.playMusic();
                 //Waits till the song has ended and puts the thread to sleep
                 while(!MediaplayerService.this.mp3Player.isStopped()){
                     Thread.sleep(5000);
