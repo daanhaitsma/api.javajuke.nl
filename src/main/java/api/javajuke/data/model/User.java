@@ -3,13 +3,21 @@ package api.javajuke.data.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+<<<<<<< HEAD
+=======
+import lombok.Getter;
+import lombok.Setter;
+>>>>>>> develop
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.lang.Nullable;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class User {
@@ -35,53 +43,5 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Set<Playlist> getPlaylists() {
-        return playlists;
-    }
-
-    public void setPlaylists(Set<Playlist> playlists) {
-        this.playlists = playlists;
     }
 }

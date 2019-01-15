@@ -79,9 +79,13 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found."));
 
     }
+<<<<<<< HEAD
         public User getUserByToken (String token){
             return userRepository.findByToken(token)
                     .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
 
         }
+=======
+
+>>>>>>> develop
 }

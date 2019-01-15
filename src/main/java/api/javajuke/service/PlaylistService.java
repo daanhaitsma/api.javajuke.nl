@@ -1,8 +1,10 @@
 package api.javajuke.service;
 
 import api.javajuke.data.PlaylistRepository;
+import api.javajuke.data.UserRepository;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
+import api.javajuke.data.model.User;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -15,27 +17,64 @@ public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final TrackService trackService;
+    private final UserRepository userRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService) {
+    /**
+     * Constructor for the PlaylistService class.
+     *
+     * @param playlistRepository playlist repository containing all playlist data
+     * @param trackService track service containing track logic
+     * @param userRepository user repository containing user logic
+     */
+    public PlaylistService(PlaylistRepository playlistRepository, TrackService trackService, UserRepository userRepository) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
+        this.userRepository = userRepository;
     }
 
+    /**
+     * Gets all playlists from the playlist repository.
+     *
+     * @return list with all playlists
+     */
     public List<Playlist> getPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public Playlist createPlaylist(String name) {
-        Playlist playlist = new Playlist(name);
+    /**
+     * Creates a new playlist with the specified name and user token
+     *
+     * @param name the playlist name
+     * @param token the owners token
+     * @return the newly created playlist
+     */
+    public Playlist createPlaylist(String name, String token) {
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+
+        Playlist playlist = new Playlist(name, user);
 
         return playlistRepository.save(playlist);
     }
 
+    /**
+     * Gets a playlist with the specified id.
+     *
+     * @param id the id of the playlist to get
+     * @return the playlist
+     */
     public Playlist getPlaylist(long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
     }
 
+    /**
+     * Updates an existing playlist with the specified id.
+     *
+     * @param id the id of the playlist to update
+     * @param name the new playlist name
+     * @return the updated playlist
+     */
     public Playlist updatePlaylist(long id, String name) {
         if (name == null || name.equals("")) {
             throw new BadRequestException("Required request part 'name' is missing.");
@@ -47,37 +86,73 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public void deletePlaylist(long id) {
+    /**
+     * Delete an existing playlist with the specified id.
+     *
+     * @param id the id of the playlist to delete
+     * @param token the playlist owners token
+     */
+    public void deletePlaylist(long id, String token) {
         Playlist playlist = getPlaylist(id);
+
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+        // Check if the user is the playlists owner
+        if(playlist.getUser().getId() != user.getId()) {
+            throw new BadRequestException("Wrong user");
+        }
 
         playlistRepository.delete(playlist);
     }
 
+    /**
+     * Adds a track to a playlist.
+     *
+     * @param id the playlist id
+     * @param trackId the track id
+     * @return the playlist containing the added track
+     */
     public Playlist addTrackToPlaylist(long id, long trackId) {
         Track track = trackService.getTrack(trackId);
 
         Playlist playlist = getPlaylist(id);
-        playlist.getTracks().add(track);
 
+        // Iterate over all the tracks in the playlist
+        for (Track playlistTrack : playlist.getTracks()) {
+            // If the track to be added is already found, don't add it again
+            if (playlistTrack.getId() == trackId) {
+                // Stop when the track is found, so as to not keep iterating unnecessarily
+                throw new BadRequestException("Track already exists in this playlist");
+            }
+        }
+
+        playlist.getTracks().add(track);
         return playlistRepository.save(playlist);
+
     }
 
+    /**
+     * Removes a track from a playlist.
+     *
+     * @param id the playlist id
+     * @param trackId the track id
+     * @return the playlist without the removed track
+     */
     public Playlist removeTrackFromPlaylist(long id, long trackId) {
         Playlist playlist = getPlaylist(id);
 
-        // Iterate over all the tracks
         Iterator<Track> trackIterator = playlist.getTracks().iterator();
-        Boolean trackFound = false;
-        while (trackIterator.hasNext() && !trackFound) {
+        // Iterate over all the tracks
+        while (trackIterator.hasNext()) {
             Track track = trackIterator.next();
             // If the track to be deleted is found, actually delete it
             if (track.getId() == trackId) {
                 trackIterator.remove();
                 // Stop when the track is found, so as to not keep iterating unnecessarily
-                trackFound = true;
+                return playlistRepository.save(playlist);
             }
         }
 
-        return playlistRepository.save(playlist);
+        throw new BadRequestException("Track doesn't exists in this playlist");
     }
 }
