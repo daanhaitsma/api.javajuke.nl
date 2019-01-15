@@ -71,8 +71,19 @@ public class UserController implements VersionController {
      * @param token the user token
      * @return the user that has the specified token
      */
-    @GetMapping(value = "/getuser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public User getUserByToken(@RequestHeader(value = "X-Authorization") String token){
         return userService.getUserByToken(token);
+    }
+
+    /**
+     * Creates an endpoint that deletes a playlist with the token.
+     *
+     * @param token the X-Authorization header value which contains the user token
+     * @throws EntityNotFoundException when the user cannot be found
+     */
+    @DeleteMapping("/users")
+    public void delete(@RequestHeader(value = "X-Authorization") String token) throws EntityNotFoundException{
+        userService.deleteUser(token);
     }
 }

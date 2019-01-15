@@ -79,4 +79,10 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
     }
 
+    public void deleteUser(String token) {
+        User user = userRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("The user you are trying to delete cannot be found."));
+        userRepository.delete(user);
+    }
+
 }
