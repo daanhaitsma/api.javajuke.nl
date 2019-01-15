@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import com.mpatric.mp3agic.*;
 
 import javax.imageio.ImageIO;
@@ -40,6 +44,28 @@ public class TrackService {
      */
     public List<Track> getTracks() {
         return trackRepository.findAll();
+    }
+
+    /**
+     * Returns a List object containing all tracks that are stored in the database and filters
+     * out tracks based on the specified search query.     *
+     *
+     * @param search the string to filter the list of tracks
+     * @return a list with all tracks
+     */
+    public List<Track> getTracks(Optional<String> search){
+        List<Track> tracks = trackRepository.findAll();
+        String searchInput = search.get();
+
+        List<Track> filteredTracks = new ArrayList<>();
+        for (Track item : tracks) {
+            if(item.getTitle() != null && item.getArtist() != null && item.getAlbum() != null){
+                if(item.getTitle().contains(searchInput) || item.getArtist().contains(searchInput) || item.getAlbum().contains(searchInput)){
+                    filteredTracks.add(item);
+                }
+            }
+        }
+        return filteredTracks;
     }
 
     /**

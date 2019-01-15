@@ -25,20 +25,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `playlist`
+-- Tabelstructuur voor tabel `Playlist`
 --
 
-CREATE TABLE `playlist` (
+CREATE TABLE `Playlist` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `playlist`
+-- Gegevens worden geëxporteerd voor tabel `Playlist`
 --
 
-INSERT INTO `playlist` (`id`, `user_id`, `name`) VALUES
+INSERT INTO `Playlist` (`id`, `user_id`, `name`) VALUES
 (1, 1, 'Playlist 1'),
 (2, 1, 'Playlist 2');
 
@@ -48,16 +48,16 @@ INSERT INTO `playlist` (`id`, `user_id`, `name`) VALUES
 -- Tabelstructuur voor tabel `playlist_track`
 --
 
-CREATE TABLE `playlist_track` (
+CREATE TABLE `Playlist_track` (
   `playlist_id` int(11) NOT NULL,
   `track_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `playlist_track`
+-- Gegevens worden geëxporteerd voor tabel `Playlist_track`
 --
 
-INSERT INTO `playlist_track` (`playlist_id`, `track_id`) VALUES
+INSERT INTO `Playlist_track` (`playlist_id`, `track_id`) VALUES
 (1, 1),
 (1, 2);
 
@@ -67,7 +67,7 @@ INSERT INTO `playlist_track` (`playlist_id`, `track_id`) VALUES
 -- Tabelstructuur voor tabel `track`
 --
 
-CREATE TABLE `track` (
+CREATE TABLE `Track` (
   `id` int(11) NOT NULL,
   `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -77,10 +77,10 @@ CREATE TABLE `track` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `track`
+-- Gegevens worden geëxporteerd voor tabel `Track`
 --
 
-INSERT INTO `track` (`id`, `path`, `title`, `artist`, `duration`, `album`) VALUES
+INSERT INTO `Track` (`id`, `path`, `title`, `artist`, `duration`, `album`) VALUES
 (1, 'example/path/1', NULL, NULL, 0, NULL),
 (2, 'example/path/2', NULL, NULL, 0, NULL),
 (3, 'example/path/3', NULL, NULL, 0, NULL),
@@ -95,10 +95,10 @@ INSERT INTO `track` (`id`, `path`, `title`, `artist`, `duration`, `album`) VALUE
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `user`
+-- Tabelstructuur voor tabel `User`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `User` (
   `id` int(11) NOT NULL,
   `token` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -107,26 +107,15 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Gegevens worden geëxporteerd voor tabel `user`
+-- Indexen voor tabel `Playlist`
 --
-
-INSERT INTO `user` (`id`, `token`, `email`, `username`, `password`) VALUES
-(1, 'KLDFkldfiweurEEOIRIkgjdkgsieieifOPDFOIDJFKLM', '', '', '');
-
---
--- Indexen voor geëxporteerde tabellen
---
-
---
--- Indexen voor tabel `playlist`
---
-ALTER TABLE `playlist`
+ALTER TABLE `Playlist`
   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexen voor tabel `playlist_track`
 --
-ALTER TABLE `playlist_track`
+ALTER TABLE `Playlist_track`
   ADD PRIMARY KEY (`playlist_id`,`track_id`),
   ADD KEY `IDX_75FFE1E56BBD148` (`playlist_id`),
   ADD KEY `IDX_75FFE1E55ED23C43` (`track_id`);
@@ -134,13 +123,13 @@ ALTER TABLE `playlist_track`
 --
 -- Indexen voor tabel `track`
 --
-ALTER TABLE `track`
+ALTER TABLE `Track`
   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexen voor tabel `user`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -150,19 +139,19 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT voor een tabel `playlist`
 --
-ALTER TABLE `playlist`
+ALTER TABLE `Playlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT voor een tabel `track`
 --
-ALTER TABLE `track`
+ALTER TABLE `Track`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -170,9 +159,9 @@ ALTER TABLE `user`
 --
 
 --
--- Beperkingen voor tabel `playlist_track`
+-- Beperkingen voor tabel `Playlist_track`
 --
-ALTER TABLE `playlist_track`
+ALTER TABLE `Playlist_track`
   ADD CONSTRAINT `FK_75FFE1E55ED23C43` FOREIGN KEY (`track_id`) REFERENCES `track` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_75FFE1E56BBD148` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`) ON DELETE CASCADE;
 COMMIT;
@@ -181,4 +170,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
-ALTER TABLE `user` CHANGE `token` `token` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;
+ALTER TABLE `User` CHANGE `token` `token` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;

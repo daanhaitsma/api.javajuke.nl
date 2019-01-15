@@ -56,7 +56,7 @@ public class UserController implements VersionController {
     }
 
     /**
-     * Creates an API endpoint to log a logged in user out
+     * Creates an API endpoint to log a logged in user out.
      *
      * @param token the token of the user that wants to log out
      */
@@ -65,8 +65,25 @@ public class UserController implements VersionController {
         userService.logoutUser(token);
     }
 
-    @GetMapping(value = "/getuser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    /**
+     * Creates an API endpoint to get a user by the specified token.
+     *
+     * @param token the user token
+     * @return the user that has the specified token
+     */
+    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public User getUserByToken(@RequestHeader(value = "X-Authorization") String token){
         return userService.getUserByToken(token);
+    }
+
+    /**
+     * Creates an endpoint that deletes a playlist with the token.
+     *
+     * @param token the X-Authorization header value which contains the user token
+     * @throws EntityNotFoundException when the user cannot be found
+     */
+    @DeleteMapping("/users")
+    public void delete(@RequestHeader(value = "X-Authorization") String token) throws EntityNotFoundException{
+        userService.deleteUser(token);
     }
 }
