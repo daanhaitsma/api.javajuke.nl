@@ -7,9 +7,17 @@ import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+<<<<<<< Updated upstream:src/main/java/api/javajuke/tests/UserFunctionalTest.java
 
 public class UserFunctionalTest extends FunctionalTest{
+=======
+@FixMethodOrder(MethodSorters.DEFAULT)
+public class RestEndpointTests extends FunctionalTest{
+>>>>>>> Stashed changes:src/main/java/api/javajuke/tests/RestEndpointTests.java
 
     private String token;
 
