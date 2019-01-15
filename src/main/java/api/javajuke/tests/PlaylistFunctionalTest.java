@@ -48,7 +48,6 @@ public class PlaylistFunctionalTest extends FunctionalTest {
 
     @Test
     public void dTestGetPlaylists() {
-        System.out.println(token);
         given()
                 .header("X-Authorization", token)
                 .get("/playlists")
@@ -84,7 +83,7 @@ public class PlaylistFunctionalTest extends FunctionalTest {
 
         given()
                 .header("X-Authorization", token)
-                .formParam("name", "updatedTest")
+                .formParam("name", "Updated Playlist")
                 .put("/playlists/" + playlistId)
                 .then()
                 .statusCode(200);
