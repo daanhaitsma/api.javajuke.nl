@@ -102,7 +102,18 @@ public class PlaylistService {
             throw new BadRequestException("Wrong user");
         }
 
-        playlistRepository.delete(playlist);
+        Iterator<Playlist> playlistIterator = user.getPlaylists().iterator();
+        // Iterate over all the playlists
+        while (playlistIterator.hasNext()) {
+            Playlist pl = playlistIterator.next();
+            // If the playlist to be deleted is found, actually delete it
+            if (pl.getId() == id) {
+                playlistIterator.remove();
+                userRepository.save(user);
+                // Stop when the playlist is found, so as to not keep iterating unnecessarily
+                return;
+            }
+        }
     }
 
     /**

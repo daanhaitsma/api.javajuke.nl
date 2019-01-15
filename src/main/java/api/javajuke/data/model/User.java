@@ -28,7 +28,9 @@ public class User {
     @JsonBackReference
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
     )
     private Set<Playlist> playlists = new HashSet<>();
 
