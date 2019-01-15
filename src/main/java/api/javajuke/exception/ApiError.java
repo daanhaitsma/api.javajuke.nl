@@ -7,19 +7,19 @@ import java.util.Date;
 public class ApiError {
 
     private HttpStatus status;
+    private int code;
     private Date timestamp;
     private String message;
-    private String details;
 
     private ApiError() {
         timestamp = new Date();
     }
 
-    public ApiError(HttpStatus status, String message, String details) {
+    public ApiError(HttpStatus status, String message, int code) {
         this();
         this.status = status;
         this.message = message;
-        this.details = details;
+        this.code = code;
     }
 
     public HttpStatus getStatus() {
@@ -46,11 +46,11 @@ public class ApiError {
         this.message = message;
     }
 
-    public String getDetails() {
-        return details;
+    public int getCode() {
+        return code;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setCode(int code) {
+        this.code = code;
     }
 }
