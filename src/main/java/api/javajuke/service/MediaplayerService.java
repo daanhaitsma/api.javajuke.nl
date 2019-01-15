@@ -88,11 +88,13 @@ public class MediaplayerService {
 
     //Plays the next song on the playlist
     public void nextSong(){
+        playMusic();
         mp3Player.skipForward();
     }
 
     //Plays the previous song on the playlist
     public void previousSong(){
+        playMusic();
         mp3Player.skipBackward();
     }
 
