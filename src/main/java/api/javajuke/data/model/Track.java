@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,8 +26,10 @@ public class Track {
     @Nullable
     private String artist;
     private long duration;
-    @Nullable
-    private String album;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
 
     @JsonBackReference
     @ManyToMany(
@@ -41,5 +45,13 @@ public class Track {
 
     public Track(String path) {
         this.path = path;
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
     }
 }
