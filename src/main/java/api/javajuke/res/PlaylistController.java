@@ -32,7 +32,8 @@ public class PlaylistController implements VersionController{
     }
 
     /**
-     * Creates an endpoint that returns a json response with all playlists.
+     * Creates an endpoint that returns a json response with all playlists. Returns the list as
+     * an object with data as its key.
      *
      * @return all playlists as a json response
      */

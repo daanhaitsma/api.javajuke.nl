@@ -142,6 +142,29 @@ public class TrackService {
     }
 
     /**
+     * Creates an array with newly created tracks.
+     *
+     * @param files the uploaded files
+     * @return the list with newly created tracks
+     */
+    public List<Track> createTracks(MultipartFile files[]) {
+        List<Track> tracks = new ArrayList<>();
+
+        for(MultipartFile file : files) {
+            try {
+                Track track = createTrack(file);
+
+                tracks.add(track);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+        return tracks;
+    }
+
+    /**
      * Deletes a track which is connected to the specified id
      * and also deletes the file which is associated with the track.
      *
