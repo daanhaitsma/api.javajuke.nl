@@ -53,8 +53,7 @@ public class TrackService {
      */
     public List<Track> getTracks(Optional<String> search){
         String searchInput = search.get();
-        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput)
-                .orElseThrow(() -> new EntityNotFoundException("Track with search string '" + searchInput + "' not found."));
+        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput);
     }
 
     /**
