@@ -218,6 +218,21 @@ public class TrackService {
             throw new FileNotFoundException("TEST");
         }
 
+        Long albumId = track.getAlbum().getId();
+
         trackRepository.delete(track);
+
+        if(trackRepository.findByAlbum_Id(albumId).size() == 0) {
+            System.out.println("ALBUM ID IS: " + albumId);
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+            String albumPath = uploadDirectory + "albumcover/" + album.getCoverPath();
+
+            File destination = new File(albumPath);
+            destination.delete();
+
+            albumRepository.deleteById(albumId);
+        }
+
     }
 }
