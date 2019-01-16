@@ -5,12 +5,15 @@ import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.TrackService;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +27,9 @@ import java.util.Optional;
 public class TrackController implements VersionController{
 
     private final TrackService trackService;
+
+    @Value("${juke.scan.directory}")
+    private String scanDirectory;
 
     /**
      * Constructor for the TrackController class.
@@ -93,7 +99,15 @@ public class TrackController implements VersionController{
      * @throws FileNotFoundException when the track file is not found
      */
     @DeleteMapping(value = "/tracks/{id}")
-    public void create(@PathVariable("id") long id) throws FileNotFoundException {
+    public void delete(@PathVariable("id") long id) throws FileNotFoundException {
         trackService.deleteTrack(id);
+    }
+
+    @GetMapping(value = "/tracks/sync")
+    public List<Track> sync() {
+        File directory = new File(scanDirectory);
+        File[] files = directory.listFiles();
+
+        return trackService.createTracksFromSync(files);
     }
 }
