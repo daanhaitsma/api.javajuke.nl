@@ -78,7 +78,7 @@ public class MediaplayerService {
         ArrayList<File> files = new ArrayList<>();
         while (trackIterator.hasNext()) {
             Track track = trackIterator.next();
-            files.add(new File(track.getPath()));
+            files.add(track.getFile());
         }
 
         // Create the mp3player
@@ -102,9 +102,16 @@ public class MediaplayerService {
         mp3Player.skipBackward();
     }
 
+    // Adds the specified track to the queue at the specified position
     public void addTrackToQueue(long trackID) {
+        int position = mp3Player.getPlayingIndex() + 1;
         Track track = trackService.getTrack(trackID);
-        trackList.add(track);
+
+        List<Track> trackListList = new ArrayList<>(trackList);
+        trackListList.add(position, track);
+        trackList = new LinkedHashSet<>(trackListList);
+
+        mp3Player.addAtIndex(position, track.getFile());
     }
 
     // Shuffles the playlist

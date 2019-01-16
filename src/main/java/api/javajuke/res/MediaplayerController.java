@@ -66,8 +66,9 @@ public class MediaplayerController {
 
     @PutMapping("/player/queue")
     public PlayerState addTrackToQueue(@RequestBody MultiValueMap<String, String> body){
-        String trackID = body.getFirst("track");
-        mediaplayerService.addTrackToQueue(Long.parseLong(trackID));
+        Long trackID = Long.parseLong(body.getFirst("track"));
+
+        mediaplayerService.addTrackToQueue(trackID);
         return mediaplayerService.getPlayerState();
     }
 
