@@ -200,7 +200,7 @@ public class TrackService {
      * @param files the uploaded files
      * @return the list with newly created tracks
      */
-    public List<Track> createTracks(MultipartFile files[]) {
+    public List<Track> createTracks(MultipartFile[] files) {
         List<Track> tracks = new ArrayList<>();
 
         for(MultipartFile file : files) {
