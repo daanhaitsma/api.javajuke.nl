@@ -52,18 +52,9 @@ public class TrackService {
      * @return a list with all tracks
      */
     public List<Track> getTracks(Optional<String> search){
-        List<Track> tracks = trackRepository.findAll();
         String searchInput = search.get();
-
-        List<Track> filteredTracks = new ArrayList<>();
-        for (Track item : tracks) {
-            if(item.getTitle() != null && item.getArtist() != null && item.getAlbum() != null){
-                if(item.getTitle().contains(searchInput) || item.getArtist().contains(searchInput) || item.getAlbum().contains(searchInput)){
-                    filteredTracks.add(item);
-                }
-            }
-        }
-        return filteredTracks;
+        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput)
+                .orElseThrow(() -> new EntityNotFoundException("Track with search string '" + searchInput + "' not found."));
     }
 
     /**

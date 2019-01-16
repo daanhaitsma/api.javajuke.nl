@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class PlaylistController implements VersionController{
@@ -67,10 +66,7 @@ public class PlaylistController implements VersionController{
      * @throws EntityNotFoundException when the playlist is not found
      */
     @GetMapping("/playlists/{id}")
-    public Playlist show(@PathVariable("id") long id, @RequestParam(value = "search", required = false) Optional<String> search) throws EntityNotFoundException {
-        if(search.isPresent()){
-            return playlistService.getPlaylist(id, search);
-        }
+    public Playlist show(@PathVariable("id") long id) throws EntityNotFoundException {
         return playlistService.getPlaylist(id);
     }
 
