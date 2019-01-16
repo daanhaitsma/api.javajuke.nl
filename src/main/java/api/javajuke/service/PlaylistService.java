@@ -9,8 +9,7 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PlaylistService {
@@ -69,6 +68,31 @@ public class PlaylistService {
     }
 
     /**
+     * Gets a playlist with the specified id and filters the playlists
+     * tracks based on the specified search query.
+     *
+     * @param id the playlists id to get
+     * @param search the search query to search for
+     * @return the playlist with filtered tracks based on the search query
+     */
+    public Playlist getPlaylist(long id, Optional<String> search){
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
+        String searchInput = search.get();
+
+        Set<Track> tracks = new HashSet<>();
+        for (Track item : playlist.getTracks()) {
+            // Check for each track if it matches the search criteria
+            if(item.getAlbum().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
+                tracks.add(item);
+            }
+        }
+        // Update the playlist tracks with the filtered tracks
+        playlist.setTracks(tracks);
+        return playlist;
+    }
+
+    /**
      * Updates an existing playlist with the specified id.
      *
      * @param id the id of the playlist to update
@@ -102,7 +126,18 @@ public class PlaylistService {
             throw new BadRequestException("Wrong user");
         }
 
-        playlistRepository.delete(playlist);
+        Iterator<Playlist> playlistIterator = user.getPlaylists().iterator();
+        // Iterate over all the playlists
+        while (playlistIterator.hasNext()) {
+            Playlist pl = playlistIterator.next();
+            // If the playlist to be deleted is found, actually delete it
+            if (pl.getId() == id) {
+                playlistIterator.remove();
+                userRepository.save(user);
+                // Stop when the playlist is found, so as to not keep iterating unnecessarily
+                return;
+            }
+        }
     }
 
     /**

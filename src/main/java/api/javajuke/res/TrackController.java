@@ -6,13 +6,19 @@ import api.javajuke.service.TrackService;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class TrackController implements VersionController{
@@ -31,14 +37,26 @@ public class TrackController implements VersionController{
     }
 
     /**
-     * Creates an endpoint that returns a json response with all tracks.
+     * Creates an endpoint that returns a json response with all tracks. Returns the list as
+     * an object with data as its key.
      *
      * @return all tracks as a json response
      */
     @GetMapping("/tracks")
-    public List<Track> index() {
-        return trackService.getTracks();
+    public ResponseEntity index(@RequestParam(value = "search", required = false) Optional<String> search) {
+        List<Track> tracks;
+        if(search.isPresent()){
+            tracks = trackService.getTracks(search);
+        } else {
+            tracks = trackService.getTracks();
+        }
+
+        HashMap<String, List<Track>> map = new HashMap<>();
+        map.put("data", tracks);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
 
     /**
      * Creates an endpoint that shows a track with the specified id.
@@ -53,17 +71,19 @@ public class TrackController implements VersionController{
     }
 
     /**
-     * Creates an endpoint that creates a new track.
+     * Creates an endpoint that creates a new track for each uploaded file.
      *
-     * @param file mp3 file which contains track information
+     * @param files mp3 files which contain track information
      * @return the newly created track as a json response
-     * @throws IOException when the file upload does not work
-     * @throws InvalidDataException when the file is not a mp3 file
-     * @throws UnsupportedTagException when the mp3 file does not have the correct tags
      */
     @PostMapping(value = "/tracks", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Track create(@RequestParam("file") MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
-        return trackService.createTrack(file);
+    public ResponseEntity create(@RequestParam("files") MultipartFile files[]) {
+        List<Track> tracks = trackService.createTracks(files);
+
+        HashMap<String, List<Track>> map = new HashMap<>();
+        map.put("data", tracks);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**

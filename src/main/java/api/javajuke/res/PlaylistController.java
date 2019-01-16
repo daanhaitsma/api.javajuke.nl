@@ -2,20 +2,20 @@ package api.javajuke.res;
 
 import api.javajuke.data.model.PlayerState;
 import api.javajuke.data.model.Playlist;
-import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.MediaplayerService;
 import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class PlaylistController implements VersionController{
@@ -35,13 +35,18 @@ public class PlaylistController implements VersionController{
     }
 
     /**
-     * Creates an endpoint that returns a json response with all playlists.
+     * Creates an endpoint that returns a json response with all playlists. Returns the list as
+     * an object with data as its key.
      *
      * @return all playlists as a json response
      */
     @GetMapping("/playlists")
-    public List<Playlist> show() {
-        return playlistService.getPlaylists();
+    public ResponseEntity index() {
+        List<Playlist> playlists = playlistService.getPlaylists();
+        HashMap<String, List<Playlist>> map = new HashMap<>();
+        map.put("data", playlists);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**
@@ -66,7 +71,10 @@ public class PlaylistController implements VersionController{
      * @throws EntityNotFoundException when the playlist is not found
      */
     @GetMapping("/playlists/{id}")
-    public Playlist show(@PathVariable("id") long id) throws EntityNotFoundException {
+    public Playlist show(@PathVariable("id") long id, @RequestParam(value = "search", required = false) Optional<String> search) throws EntityNotFoundException {
+        if(search.isPresent()){
+            return playlistService.getPlaylist(id, search);
+        }
         return playlistService.getPlaylist(id);
     }
 
