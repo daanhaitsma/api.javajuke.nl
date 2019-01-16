@@ -104,10 +104,15 @@ public class TrackController implements VersionController{
     }
 
     @GetMapping(value = "/tracks/sync")
-    public List<Track> sync() {
+    public ResponseEntity sync() {
         File directory = new File(scanDirectory);
         File[] files = directory.listFiles();
 
-        return trackService.createTracksFromSync(files);
+        List<Track> tracks = trackService.createTracksFromSync(files);
+
+        HashMap<String, List<Track>> map = new HashMap<>();
+        map.put("data", tracks);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
