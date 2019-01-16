@@ -1,6 +1,8 @@
 package api.javajuke.service;
 
+import api.javajuke.data.AlbumRepository;
 import api.javajuke.data.TrackRepository;
+import api.javajuke.data.model.Album;
 import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
@@ -27,14 +29,16 @@ public class TrackService {
     private String uploadDirectory;
 
     private final TrackRepository trackRepository;
+    private final AlbumRepository albumRepository;
 
     /**
      * Constructor for the TrackService class.
      *
      * @param trackRepository the repository which contains all track data
      */
-    public TrackService(TrackRepository trackRepository) {
+    public TrackService(TrackRepository trackRepository, AlbumRepository albumRepository) {
         this.trackRepository = trackRepository;
+        this.albumRepository = albumRepository;
     }
 
     /**
@@ -138,6 +142,7 @@ public class TrackService {
                 throw new BadRequestException("Song already in library");
             }
 
+            Album albumTest = null;
             if (imageData != null) {
 
                 if(!new File(uploadDirectory + "/albumcover").exists())
@@ -162,6 +167,13 @@ public class TrackService {
                 File listOfAlbumCovers[] = albumFolder.listFiles();
 
                 String albumCoverImageName = artist + album + imageExtension;
+                if(albumRepository.findByCoverPath(albumCoverImageName).isPresent()) {
+                    albumTest = albumRepository.findByCoverPath(albumCoverImageName)
+                            .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+                } else {
+                    albumTest = new Album(album, albumCoverImageName);
+                    albumRepository.save(albumTest);
+                }
 
                 boolean albumCoverImageFound = false;
                 for (File fileLoop : listOfAlbumCovers) {
@@ -182,6 +194,7 @@ public class TrackService {
 
             track.setArtist(artist);
             track.setTitle(title);
+            track.setAlbum(albumTest);
         }
 
         return trackRepository.save(track);

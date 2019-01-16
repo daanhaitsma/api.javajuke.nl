@@ -51,4 +51,7 @@ public class Track {
         return album;
     }
 
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
 }

@@ -24,6 +24,13 @@ public class Album {
     )
     private List<Track> tracks;
 
+    public Album(String name, String coverPath) {
+        this.name = name;
+        this.coverPath = coverPath;
+    }
+
+    public Album() {}
+
     public long getId() {
         return id;
     }
