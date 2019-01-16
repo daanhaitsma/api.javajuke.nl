@@ -86,25 +86,20 @@ public class TrackService {
      * @throws InvalidDataException when the uploaded file is invalid
      * @throws UnsupportedTagException when the tags of the uploaded file are unsupported
      */
-    public Track createTrack(MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
+    public Track createTrack(File file) throws IOException, InvalidDataException, UnsupportedTagException {
         if(!new File(uploadDirectory).exists())
         {
             // Create upload directory if it doesn't exist
             new File(uploadDirectory).mkdir();
         }
 
-        // Make sure the uploaded file is an audio file
-        if(!file.getContentType().equals("audio/mpeg")) {
-            throw new IllegalArgumentException("Not an audio file");
-        }
-
-        String fileName = file.getOriginalFilename();
+        String fileName = file.getName();
         String filePath = uploadDirectory + fileName;
 
         File destination = new File(filePath);
 
         Track track = new Track(filePath);
-        file.transferTo(destination);
+        file.renameTo(destination);
 
         Mp3File mp3File = new Mp3File(destination);
         track.setDuration(mp3File.getLengthInSeconds());
@@ -203,7 +198,31 @@ public class TrackService {
     public List<Track> createTracks(MultipartFile[] files) {
         List<Track> tracks = new ArrayList<>();
 
-        for(MultipartFile file : files) {
+        for(MultipartFile uploadedFile : files) {
+            try {
+                File file = convertMultipartFileToFile(uploadedFile);
+                Track track = createTrack(file);
+
+                tracks.add(track);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+        return tracks;
+    }
+
+    /**
+     * Creates an array with newly created tracks from the sync directory.
+     *
+     * @param files the files from the sync directory
+     * @return the list with newly created tracks
+     */
+    public List<Track> createTracksFromSync(File[] files) {
+        List<Track> tracks = new ArrayList<>();
+
+        for(File file : files) {
             try {
                 Track track = createTrack(file);
 
@@ -253,5 +272,16 @@ public class TrackService {
             albumRepository.deleteById(albumId);
         }
 
+    }
+
+    private File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
+        String fileName = multipartFile.getOriginalFilename();
+        String filePath = uploadDirectory + fileName;
+
+        File destination = new File(filePath);
+
+        multipartFile.transferTo(destination);
+
+        return destination;
     }
 }
