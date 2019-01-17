@@ -11,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static com.jayway.restassured.RestAssured.given;
 
@@ -63,7 +64,10 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void eTestUploadTrack() throws IOException {
-        File file = new ClassPathResource("test.mp3").getFile();
+
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        // read as a file
+        File file = new File(classloader.getResource("test.mp3").getFile());
 
         trackId = given()
                 .header("X-Authorization", token)
