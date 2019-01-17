@@ -38,4 +38,57 @@ public class MediaplayerServiceUnitTest {
         Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), "C:/Users/Daan/Documents/__javajuke/mp3/startup.mp3");
     }
 
+    @Test
+    public void testPauseSong(){
+        Playlist dummyPlaylist = new Playlist();
+        HashSet<Track> tracks = new HashSet<>();
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/startup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/startup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/startup.mp3"));
+        dummyPlaylist.setTracks(tracks);
+
+        // Act
+        mediaplayerService.playPlaylist(dummyPlaylist);
+        mediaplayerService.togglePlay();
+
+        // Assert
+        Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
+        Assert.assertEquals(mediaplayerService.isPlaying(), false);
+    }
+
+    @Test
+    public void testNextSong(){
+        Playlist dummyPlaylist = new Playlist();
+        HashSet<Track> tracks = new HashSet<>();
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/middleup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/startup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/endup.mp3"));
+        dummyPlaylist.setTracks(tracks);
+
+        // Act
+        mediaplayerService.playPlaylist(dummyPlaylist);
+        mediaplayerService.nextSong();
+
+        // Assert
+        Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
+        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), "C:/Users/viper/Desktop/api.javajuke/middleup.mp3");
+    }
+
+    @Test
+    public void testPreviousSong(){
+        Playlist dummyPlaylist = new Playlist();
+        HashSet<Track> tracks = new HashSet<>();
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/startup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/endup.mp3"));
+        tracks.add(new Track("C:/Users/viper/Desktop/api.javajuke/middleup.mp3"));
+        dummyPlaylist.setTracks(tracks);
+
+        // Act
+        mediaplayerService.playPlaylist(dummyPlaylist);
+        mediaplayerService.previousSong();
+
+        // Assert
+        Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
+        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), "C:/Users/viper/Desktop/api.javajuke/endup.mp3");
+    }
 }
