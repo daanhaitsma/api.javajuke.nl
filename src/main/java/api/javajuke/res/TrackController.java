@@ -89,7 +89,7 @@ public class TrackController implements VersionController{
         HashMap<String, List<Track>> map = new HashMap<>();
         map.put("data", tracks);
 
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
     /**
