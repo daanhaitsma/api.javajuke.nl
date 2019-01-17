@@ -31,12 +31,13 @@ public class PlaylistController implements VersionController{
     }
 
     /**
-     * Creates an endpoint that returns a json response with all playlists.
+     * Creates an endpoint that returns a json response with all playlists. Returns the list as
+     * an object with data as its key.
      *
      * @return all playlists as a json response
      */
     @GetMapping("/playlists")
-    public ResponseEntity show() {
+    public ResponseEntity index() {
         List<Playlist> playlists = playlistService.getPlaylists();
         HashMap<String, List<Playlist>> map = new HashMap<>();
         map.put("data", playlists);

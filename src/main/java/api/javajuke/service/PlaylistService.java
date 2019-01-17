@@ -9,8 +9,7 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PlaylistService {
