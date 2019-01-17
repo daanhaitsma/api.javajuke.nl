@@ -148,6 +148,9 @@ public class MediaplayerService {
     }
 
     public Track getCurrentTrack() {
+        if(mp3Player.isStopped()){
+            return null;
+        }
         List<Track> trackListList = new ArrayList<>(trackList);
         return trackListList.get(mp3Player.getPlayingIndex());
     }
