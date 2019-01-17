@@ -60,7 +60,7 @@ public class TrackService {
      */
     public List<Track> getTracks(Optional<String> search){
         String searchInput = search.get();
-        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput);
+        return trackRepository.findAllByArtistContainingOrTitleContaining(searchInput, searchInput);
     }
 
     /**
