@@ -1,11 +1,14 @@
 package api.javajuke.data.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class PlayerState {
     private int position;
     private int volume;
@@ -15,15 +18,4 @@ public class PlayerState {
     private boolean paused;
     private Track currentTrack;
     private Set<Track> trackList;
-
-    public PlayerState(int position, int volume, boolean shuffle, boolean repeat, boolean playing, boolean paused, Track currentTrack, Set<Track> trackList) {
-        this.position = position;
-        this.volume = volume;
-        this.shuffle = shuffle;
-        this.repeat = repeat;
-        this.playing = playing;
-        this.paused = paused;
-        this.currentTrack = currentTrack;
-        this.trackList = trackList;
-    }
 }
