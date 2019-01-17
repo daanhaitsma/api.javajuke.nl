@@ -7,9 +7,8 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -45,5 +44,9 @@ public class Track {
 
     public Track(String path) {
         this.path = path;
+    }
+
+    public File getFile() {
+        return new File(getPath());
     }
 }

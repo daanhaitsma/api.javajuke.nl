@@ -1,8 +1,10 @@
 package api.javajuke.res;
 
+import api.javajuke.data.model.PlayerState;
 import api.javajuke.data.model.Playlist;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
+import api.javajuke.service.MediaplayerService;
 import api.javajuke.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,14 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class PlaylistController implements VersionController{
     private final PlaylistService playlistService;
+    private final MediaplayerService mediaplayerService;
 
     /**
      * Constructor for the PlaylistController class.
@@ -25,9 +28,10 @@ public class PlaylistController implements VersionController{
      * @param playlistService the playlist service containing all playlist logic
      */
     @Autowired
-    public PlaylistController(PlaylistService playlistService)
+    public PlaylistController(PlaylistService playlistService, MediaplayerService mediaplayerService)
     {
         this.playlistService = playlistService;
+        this.mediaplayerService = mediaplayerService;
     }
 
     /**
@@ -122,4 +126,12 @@ public class PlaylistController implements VersionController{
     public Playlist removeTrackFromPlaylist(@PathVariable long id, @PathVariable long trackId) {
         return playlistService.removeTrackFromPlaylist(id, trackId);
     }
+
+    @PutMapping(value = "/playlists/{id}/play")
+    public PlayerState play(@PathVariable("id") long id){
+        Playlist playlist = playlistService.getPlaylist(id);
+        mediaplayerService.playPlaylist(playlist);
+        return mediaplayerService.getPlayerState();
+    }
+
 }
