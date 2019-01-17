@@ -1,5 +1,10 @@
 package api.javajuke.tests;
 
+import api.javajuke.data.model.Track;
+import com.jayway.restassured.response.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -9,9 +14,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 
+import javax.swing.text.html.parser.Entity;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 
@@ -19,7 +27,9 @@ import static com.jayway.restassured.RestAssured.given;
 public class TrackFunctionalTest extends FunctionalTest {
 
     private static String token;
-    private static String trackId;
+    private static int trackId;
+    private static String info;
+    List<Entity> list = new ArrayList<>();
 
     @Test
     public void aTestRegister() {
@@ -64,24 +74,41 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void eTestUploadTrack() throws IOException {
+        File file = new ClassPathResource("testsound.mp3").getFile();
 
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        // read as a file
-        File file = new File(classloader.getResource("test.mp3").getFile());
-
-        trackId = given()
+        given()
                 .header("X-Authorization", token)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .multiPart("file", file)
+                .multiPart("files", file)
                 .post("/tracks")
                 .then()
-                .statusCode(200)
-                .extract()
-                .path("id").toString();
+                .statusCode(200);
     }
 
     @Test
-    public void fTestGetTrack() {
+    public void fgetTrackNameForTesting() {
+
+        Response response = given()
+                .header("X-Authorization", token)
+                .when()
+                .get("/tracks");
+
+        JSONObject JSONResponseBody = new JSONObject(response.body().asString());
+        JSONArray values = JSONResponseBody.getJSONArray("data");
+
+        for (int i = 0; i < values.length(); i++) {
+
+            JSONObject value = values.getJSONObject(i);
+            String name = value.getString("title");
+
+            if(name.equals("Niels")) {
+                trackId = value.getInt("id");
+            }
+        }
+    }
+
+    @Test
+    public void gTestGetTrack() {
         given()
                 .header("X-Authorization", token)
                 .get("/tracks/" + trackId)
@@ -91,7 +118,7 @@ public class TrackFunctionalTest extends FunctionalTest {
 
 
     @Test
-    public void gTestDeleteTrack() {
+    public void hTestDeleteTrack() {
         given()
                 .header("X-Authorization", token)
                 .delete("/tracks/" + trackId)
@@ -100,7 +127,7 @@ public class TrackFunctionalTest extends FunctionalTest {
     }
 
     @Test
-    public void hTestDeleteUser() {
+    public void iTestDeleteUser() {
         given()
                 .header("X-Authorization", token)
                 .delete("/users")
