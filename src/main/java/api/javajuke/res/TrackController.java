@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class TrackController implements VersionController{
 
@@ -89,7 +90,7 @@ public class TrackController implements VersionController{
         HashMap<String, List<Track>> map = new HashMap<>();
         map.put("data", tracks);
 
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
     /**
