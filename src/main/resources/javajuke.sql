@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `album`
+-- Tabelstructuur voor tabel `Album`
 --
 
-CREATE TABLE `album` (
+CREATE TABLE `Album` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `cover_path` varchar(255) DEFAULT NULL
@@ -37,10 +37,10 @@ CREATE TABLE `album` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `playlist`
+-- Tabelstructuur voor tabel `Playlist`
 --
 
-CREATE TABLE `playlist` (
+CREATE TABLE `Playlist` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -49,10 +49,10 @@ CREATE TABLE `playlist` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `playlist_track`
+-- Tabelstructuur voor tabel `Playlist_Track`
 --
 
-CREATE TABLE `playlist_track` (
+CREATE TABLE `Playlist_Track` (
   `playlist_id` int(11) NOT NULL,
   `track_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -60,10 +60,10 @@ CREATE TABLE `playlist_track` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `track`
+-- Tabelstructuur voor tabel `Track`
 --
 
-CREATE TABLE `track` (
+CREATE TABLE `Track` (
   `id` int(11) NOT NULL,
   `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -75,10 +75,10 @@ CREATE TABLE `track` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `user`
+-- Tabelstructuur voor tabel `User`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `User` (
   `id` int(11) NOT NULL,
   `token` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
@@ -91,36 +91,36 @@ CREATE TABLE `user` (
 --
 
 --
--- Indexen voor tabel `album`
+-- Indexen voor tabel `Album`
 --
-ALTER TABLE `album`
+ALTER TABLE `Album`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `playlist`
+-- Indexen voor tabel `Playlist`
 --
-ALTER TABLE `playlist`
+ALTER TABLE `Playlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `playlist_track`
+-- Indexen voor tabel `Playlist_Track`
 --
-ALTER TABLE `playlist_track`
+ALTER TABLE `Playlist_Track`
   ADD PRIMARY KEY (`playlist_id`,`track_id`),
   ADD KEY `IDX_75FFE1E56BBD148` (`playlist_id`),
   ADD KEY `IDX_75FFE1E55ED23C43` (`track_id`);
 
 --
--- Indexen voor tabel `track`
+-- Indexen voor tabel `Track`
 --
-ALTER TABLE `track`
+ALTER TABLE `Track`
   ADD PRIMARY KEY (`id`),
   ADD KEY `Album` (`album_id`);
 
 --
--- Indexen voor tabel `user`
+-- Indexen voor tabel `User`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -128,27 +128,27 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT voor een tabel `album`
+-- AUTO_INCREMENT voor een tabel `Album`
 --
-ALTER TABLE `album`
+ALTER TABLE `Album`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT voor een tabel `playlist`
+-- AUTO_INCREMENT voor een tabel `Playlist`
 --
-ALTER TABLE `playlist`
+ALTER TABLE `Playlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT voor een tabel `track`
+-- AUTO_INCREMENT voor een tabel `Track`
 --
-ALTER TABLE `track`
+ALTER TABLE `Track`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT voor een tabel `user`
+-- AUTO_INCREMENT voor een tabel `User`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -156,17 +156,17 @@ ALTER TABLE `user`
 --
 
 --
--- Beperkingen voor tabel `playlist_track`
+-- Beperkingen voor tabel `Playlist_Track`
 --
-ALTER TABLE `playlist_track`
-  ADD CONSTRAINT `FK_75FFE1E55ED23C43` FOREIGN KEY (`track_id`) REFERENCES `track` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_75FFE1E56BBD148` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`) ON DELETE CASCADE;
+ALTER TABLE `Playlist_Track`
+  ADD CONSTRAINT `FK_75FFE1E55ED23C43` FOREIGN KEY (`track_id`) REFERENCES `Track` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_75FFE1E56BBD148` FOREIGN KEY (`playlist_id`) REFERENCES `Playlist` (`id`) ON DELETE CASCADE;
 
 --
--- Beperkingen voor tabel `track`
+-- Beperkingen voor tabel `Track`
 --
-ALTER TABLE `track`
-  ADD CONSTRAINT `Album FK` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`);
+ALTER TABLE `Track`
+  ADD CONSTRAINT `Album FK` FOREIGN KEY (`album_id`) REFERENCES `Album` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
