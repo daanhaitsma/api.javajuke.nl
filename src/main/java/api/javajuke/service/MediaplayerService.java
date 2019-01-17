@@ -168,6 +168,14 @@ public class MediaplayerService {
         return mp3Player.isStopped();
     }
 
+    public boolean isRepeated() {
+        return mp3Player.isRepeat();
+    }
+
+    public int getVolume() {
+        return mp3Player.getVolume();
+    }
+
     class PlayerRunnable implements Runnable{
 
         private MP3Player mp3Player;
