@@ -68,31 +68,6 @@ public class PlaylistService {
     }
 
     /**
-     * Gets a playlist with the specified id and filters the playlists
-     * tracks based on the specified search query.
-     *
-     * @param id the playlists id to get
-     * @param search the search query to search for
-     * @return the playlist with filtered tracks based on the search query
-     */
-    public Playlist getPlaylist(long id, Optional<String> search){
-        Playlist playlist = playlistRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Playlist with ID " + id + " not found." ));
-        String searchInput = search.get();
-
-        Set<Track> tracks = new HashSet<>();
-        for (Track item : playlist.getTracks()) {
-            // Check for each track if it matches the search criteria
-            if(item.getAlbum().contains(searchInput) || item.getArtist().contains(searchInput) || item.getTitle().contains(searchInput)){
-                tracks.add(item);
-            }
-        }
-        // Update the playlist tracks with the filtered tracks
-        playlist.setTracks(tracks);
-        return playlist;
-    }
-
-    /**
      * Updates an existing playlist with the specified id.
      *
      * @param id the id of the playlist to update

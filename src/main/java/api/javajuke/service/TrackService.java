@@ -1,6 +1,8 @@
 package api.javajuke.service;
 
+import api.javajuke.data.AlbumRepository;
 import api.javajuke.data.TrackRepository;
+import api.javajuke.data.model.Album;
 import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
@@ -11,11 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.mpatric.mp3agic.*;
+
+import javax.imageio.ImageIO;
 
 @Service
 public class TrackService {
@@ -24,14 +29,16 @@ public class TrackService {
     private String uploadDirectory;
 
     private final TrackRepository trackRepository;
+    private final AlbumRepository albumRepository;
 
     /**
      * Constructor for the TrackService class.
      *
      * @param trackRepository the repository which contains all track data
      */
-    public TrackService(TrackRepository trackRepository) {
+    public TrackService(TrackRepository trackRepository, AlbumRepository albumRepository) {
         this.trackRepository = trackRepository;
+        this.albumRepository = albumRepository;
     }
 
     /**
@@ -52,18 +59,8 @@ public class TrackService {
      * @return a list with all tracks
      */
     public List<Track> getTracks(Optional<String> search){
-        List<Track> tracks = trackRepository.findAll();
         String searchInput = search.get();
-
-        List<Track> filteredTracks = new ArrayList<>();
-        for (Track item : tracks) {
-            if(item.getTitle() != null && item.getArtist() != null && item.getAlbum() != null){
-                if(item.getTitle().contains(searchInput) || item.getArtist().contains(searchInput) || item.getAlbum().contains(searchInput)){
-                    filteredTracks.add(item);
-                }
-            }
-        }
-        return filteredTracks;
+        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput);
     }
 
     /**
@@ -89,25 +86,20 @@ public class TrackService {
      * @throws InvalidDataException when the uploaded file is invalid
      * @throws UnsupportedTagException when the tags of the uploaded file are unsupported
      */
-    public Track createTrack(MultipartFile file) throws IOException, InvalidDataException, UnsupportedTagException {
+    public Track createTrack(File file) throws IOException, InvalidDataException, UnsupportedTagException {
         if(!new File(uploadDirectory).exists())
         {
             // Create upload directory if it doesn't exist
             new File(uploadDirectory).mkdir();
         }
 
-        // Make sure the uploaded file is an audio file
-        if(!file.getContentType().equals("audio/mpeg")) {
-            throw new IllegalArgumentException("Not an audio file");
-        }
-
-        String fileName = file.getOriginalFilename();
+        String fileName = file.getName();
         String filePath = uploadDirectory + fileName;
 
         File destination = new File(filePath);
 
         Track track = new Track(filePath);
-        file.transferTo(destination);
+        file.renameTo(destination);
 
         Mp3File mp3File = new Mp3File(destination);
         track.setDuration(mp3File.getLengthInSeconds());
@@ -117,6 +109,8 @@ public class TrackService {
             String artist = id3v2Tag.getArtist();
             String title = id3v2Tag.getTitle();
             String album = id3v2Tag.getAlbum();
+
+            byte[] imageData = id3v2Tag.getAlbumImage();
 
             if(artist == null || artist.isEmpty()) {
                 destination.delete();
@@ -133,9 +127,63 @@ public class TrackService {
                 throw new BadRequestException("Song already in library");
             }
 
+            Album albumObject = null;
+            if (imageData != null) {
+
+                if(!new File(uploadDirectory + "/albumcover").exists())
+                {
+                    // Create upload directory if it doesn't exist
+                    new File(uploadDirectory + "/albumcover").mkdir();
+                }
+
+                String imageMimeType = id3v2Tag.getAlbumImageMimeType();
+                String imageExtension;
+
+                switch (imageMimeType) {
+                    case "image/png":
+                        imageExtension = ".png";
+                        break;
+                    default:
+                        imageExtension = ".jpg";
+                        break;
+                }
+
+                File albumFolder = new File(uploadDirectory + "/albumcover");
+                File listOfAlbumCovers[] = albumFolder.listFiles();
+
+                String albumCoverImageName = artist + album + imageExtension;
+                // If file exists find the matching database entry
+                if(albumRepository.findByCoverPath(albumCoverImageName).isPresent()) {
+                    albumObject = albumRepository.findByCoverPath(albumCoverImageName)
+                            .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+                } else {
+                    // No cover image found, create a new album cover
+                    albumObject = new Album(album, albumCoverImageName);
+                    albumRepository.save(albumObject);
+                }
+
+                // Look in the folder for the album cover image
+                boolean albumCoverImageFound = false;
+                for (File fileLoop : listOfAlbumCovers) {
+                    if (fileLoop.isFile() && fileLoop.getName().equals(albumCoverImageName)) {
+                        System.out.println(fileLoop.getName() + " already exists, not adding this image");
+                        albumCoverImageFound = true;
+                    }
+                }
+
+                // If no album cover image is found, move the file to the /albumcover folder
+                if(!albumCoverImageFound) {
+                    String albumCoverPath = uploadDirectory + "/albumcover/" + albumCoverImageName;
+
+                    RandomAccessFile albumCover = new RandomAccessFile(albumCoverPath, "rw");
+                    albumCover.write(imageData);
+                    albumCover.close();
+                }
+            }
+
             track.setArtist(artist);
             track.setTitle(title);
-            track.setAlbum(album);
+            track.setAlbum(albumObject);
         }
 
         return trackRepository.save(track);
@@ -147,10 +195,34 @@ public class TrackService {
      * @param files the uploaded files
      * @return the list with newly created tracks
      */
-    public List<Track> createTracks(MultipartFile files[]) {
+    public List<Track> createTracks(MultipartFile[] files) {
         List<Track> tracks = new ArrayList<>();
 
-        for(MultipartFile file : files) {
+        for(MultipartFile uploadedFile : files) {
+            try {
+                File file = convertMultipartFileToFile(uploadedFile);
+                Track track = createTrack(file);
+
+                tracks.add(track);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+        return tracks;
+    }
+
+    /**
+     * Creates an array with newly created tracks from the sync directory.
+     *
+     * @param files the files from the sync directory
+     * @return the list with newly created tracks
+     */
+    public List<Track> createTracksFromSync(File[] files) {
+        List<Track> tracks = new ArrayList<>();
+
+        for(File file : files) {
             try {
                 Track track = createTrack(file);
 
@@ -179,9 +251,37 @@ public class TrackService {
         File file = new File(filePath);
 
         if (!file.delete()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("File could not be deleted");
         }
 
+        Long albumId = track.getAlbum().getId();
+
         trackRepository.delete(track);
+
+        // If all tracks of a certain album are deleted, remove them from the album table as well.
+        if(trackRepository.findByAlbum_Id(albumId).size() == 0) {
+            System.out.println("ALBUM ID IS: " + albumId);
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+            String albumPath = uploadDirectory + "albumcover/" + album.getCoverPath();
+
+            // Delete the album cover image
+            File destination = new File(albumPath);
+            destination.delete();
+
+            albumRepository.deleteById(albumId);
+        }
+
+    }
+
+    private File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
+        String fileName = multipartFile.getOriginalFilename();
+        String filePath = uploadDirectory + fileName;
+
+        File destination = new File(filePath);
+
+        multipartFile.transferTo(destination);
+
+        return destination;
     }
 }

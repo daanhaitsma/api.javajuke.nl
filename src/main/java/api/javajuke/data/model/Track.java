@@ -25,8 +25,10 @@ public class Track {
     @Nullable
     private String artist;
     private long duration;
-    @Nullable
-    private String album;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
 
     @JsonBackReference
     @ManyToMany(
