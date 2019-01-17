@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class TrackController implements VersionController{
 

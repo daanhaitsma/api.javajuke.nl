@@ -46,17 +46,14 @@ public class MediaplayerService {
         if (mp3Player.isPlaying()) {
             // Currently playing; pause
             mp3Player.pause();
-        }
-        else {
+        } else {
             // Currently paused; play
             mp3Player.play();
         }
     }
 
     public void stopMusic() {
-        if (mp3Player.isPlaying()) {
-            mp3Player.stop();
-        }
+        mp3Player.stop();
     }
 
     public void playPlaylist(Playlist playlist) {
@@ -92,13 +89,15 @@ public class MediaplayerService {
 
     // Plays the next song in the tracklist
     public void nextSong() {
-        mp3Player.play();
+        if (mp3Player.isPaused()) {
+            mp3Player.play();
+        }
+
         mp3Player.skipForward();
     }
 
     // Plays the previous song in the tracklist
     public void previousSong() {
-        mp3Player.play();
         mp3Player.skipBackward();
     }
 
@@ -151,6 +150,22 @@ public class MediaplayerService {
     public Track getCurrentTrack() {
         List<Track> trackListList = new ArrayList<>(trackList);
         return trackListList.get(mp3Player.getPlayingIndex());
+    }
+
+    public Set<Track> getTrackList() {
+        return trackList;
+    }
+
+    public boolean isPlaying() {
+        return mp3Player.isPlaying();
+    }
+
+    public boolean isPaused() {
+        return mp3Player.isPaused();
+    }
+
+    public boolean isStopped() {
+        return mp3Player.isStopped();
     }
 
     class PlayerRunnable implements Runnable{

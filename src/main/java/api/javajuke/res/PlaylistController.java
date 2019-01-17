@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class PlaylistController implements VersionController{
     private final PlaylistService playlistService;
