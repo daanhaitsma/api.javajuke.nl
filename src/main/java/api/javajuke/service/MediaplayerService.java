@@ -29,6 +29,13 @@ public class MediaplayerService {
         this.trackService = trackService;
     }
 
+    /**
+     * Gets all the data from the mp3Player (position of track,
+     * volume of mp3Player, shuffled state, repeat playlist state,
+     * playing state, paused state, current track, current playlist)
+     *
+     * @return object with the different statuses from the mediaplayer
+     */
     public PlayerState getPlayerState() {
         return new PlayerState(
                 mp3Player.getPosition(),
@@ -42,6 +49,9 @@ public class MediaplayerService {
 
     }
 
+    /**
+     * Toggles the mp3Player between playing and pause
+     */
     public void togglePlay() {
         if (mp3Player.isPlaying()) {
             // Currently playing; pause
@@ -52,10 +62,17 @@ public class MediaplayerService {
         }
     }
 
+    /**
+     * Stops the mp3Player
+     */
     public void stopMusic() {
         mp3Player.stop();
     }
 
+    /**
+     * Collects all the tracks for the playList and plays them
+     * @param playlist with all tracks
+     */
     public void playPlaylist(Playlist playlist) {
         // Store the playlist tracks as both the new and original trackList
         trackList = playlist.getTracks();
@@ -64,6 +81,9 @@ public class MediaplayerService {
         playTrackList();
     }
 
+    /**
+     * Stops the mediaplayer and creates a new mediaplayer object with all the tracks
+     */
     private void playTrackList() {
         // If a track is currently playing, stop it
         if (mp3Player != null) {
@@ -87,7 +107,9 @@ public class MediaplayerService {
         playerThread.start();
     }
 
-    // Plays the next song in the tracklist
+    /**
+     * Plays the next song in the tracklist, if a song is paused play it and skip to next song
+     */
     public void nextSong() {
         if (mp3Player.isPaused()) {
             mp3Player.play();
@@ -96,24 +118,36 @@ public class MediaplayerService {
         mp3Player.skipForward();
     }
 
-    // Plays the previous song in the tracklist
+    /**
+     * Plays the previous song in the tracklist
+     */
     public void previousSong() {
         mp3Player.skipBackward();
     }
 
-    // Adds the specified track to the queue at the specified position
+    /**
+     * Adds the specified track to the queue behind the track that is currently playing
+     *
+     * @param trackID trackId from database
+     */
     public void addTrackToQueue(long trackID) {
         int position = mp3Player.getPlayingIndex() + 1;
         Track track = trackService.getTrack(trackID);
+        if (mp3Player == null) {
+            trackList.add(track);
+            playTrackList();
+        } else {
+            List<Track> trackListList = new ArrayList<>(trackList);
+            trackListList.add(position, track);
+            trackList = new LinkedHashSet<>(trackListList);
 
-        List<Track> trackListList = new ArrayList<>(trackList);
-        trackListList.add(position, track);
-        trackList = new LinkedHashSet<>(trackListList);
-
-        mp3Player.addAtIndex(position, track.getFile());
+            mp3Player.addAtIndex(position, track.getFile());
+        }
     }
 
-    // Shuffles the playlist
+    /**
+     * Checks if the playlist is shuffled, if not shuffles the playlist
+     */
     public void toggleShuffle() {
         if (isShuffled) {
             // Is currently shuffled; reset
@@ -134,11 +168,18 @@ public class MediaplayerService {
         playTrackList();
     }
 
-    // Sets the volume of the mp3Player
+    /**
+     * Sets the volume of the mp3Player
+     *
+     * @param volume specified volume
+     */
     public void setVolume(int volume) {
         mp3Player.setVolume(volume);
     }
-    
+
+    /**
+     * Checks if repeat is true
+     */
     public void toggleRepeat() {
         if (mp3Player.isRepeat()) {
             mp3Player.setRepeat(false);
@@ -147,6 +188,12 @@ public class MediaplayerService {
         }
     }
 
+    /**
+     * Checks if the mp3Player is running, returns null if not running
+     * and the current track if it is running
+     *
+     * @return current track
+     */
     public Track getCurrentTrack() {
         if(mp3Player.isStopped()){
             return null;
@@ -155,10 +202,20 @@ public class MediaplayerService {
         return trackListList.get(mp3Player.getPlayingIndex());
     }
 
+    /**
+     * Get a set of tracklist
+     *
+     * @return tracklist
+     */
     public Set<Track> getTrackList() {
         return trackList;
     }
 
+    /**
+     * Checks the isPaused and isStopped boolean from the mp3Player
+     *
+     * @return isPlaying boolean
+     */
     public boolean isPlaying() {
         return mp3Player.isPlaying();
     }
@@ -175,6 +232,11 @@ public class MediaplayerService {
         return mp3Player.isRepeat();
     }
 
+    /**
+     * Checks for the volume of the mp3Player
+     *
+     * @return int volume
+     */
     public int getVolume() {
         return mp3Player.getVolume();
     }
