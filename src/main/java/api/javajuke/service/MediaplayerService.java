@@ -37,16 +37,28 @@ public class MediaplayerService {
      * @return object with the different statuses from the mediaplayer
      */
     public PlayerState getPlayerState() {
-        return new PlayerState(
-                mp3Player.getPosition(),
-                mp3Player.getVolume(),
-                isShuffled,
-                mp3Player.isRepeat(),
-                mp3Player.isPlaying(),
-                mp3Player.isPaused(),
-                getCurrentTrack(),
-                trackList);
-
+        if (isStopped()) {
+            return new PlayerState(
+                    0,
+                    50,
+                    false,
+                    true,
+                    false,
+                    false,
+                    null,
+                    null
+            );
+        } else {
+            return new PlayerState(
+                    mp3Player.getPosition(),
+                    mp3Player.getVolume(),
+                    isShuffled,
+                    mp3Player.isRepeat(),
+                    mp3Player.isPlaying(),
+                    mp3Player.isPaused(),
+                    getCurrentTrack(),
+                    trackList);
+        }
     }
 
     /**
@@ -55,13 +67,27 @@ public class MediaplayerService {
     public void togglePlay() {
         if (mp3Player.isPlaying()) {
             // Currently playing; pause
-            mp3Player.pause();
+            pauseMusic();
         } else {
             // Currently paused; play
-            mp3Player.play();
+            playMusic();
         }
     }
 
+    /**
+     * Plays the mp3Player
+     */
+    private void playMusic() {
+        mp3Player.play();
+    }
+
+    /**
+     * Pauses the mp3Player
+     */
+    private void pauseMusic() {
+        mp3Player.pause();
+    }
+    
     /**
      * Stops the mp3Player
      */
@@ -77,6 +103,11 @@ public class MediaplayerService {
         // Store the playlist tracks as both the new and original trackList
         trackList = playlist.getTracks();
         originalTrackList = trackList;
+
+        if (isShuffled) {
+            toggleShuffleOn();
+        }
+
         // Play the given playlist
         playTrackList();
     }
@@ -98,13 +129,19 @@ public class MediaplayerService {
             files.add(track.getFile());
         }
 
-        // Create the mp3player
-        mp3Player = new MP3Player(files.toArray(new File[files.size()]));
+        File[] filesArray = files.toArray(new File[files.size()]);
 
-        // Start a new thread which will play the music
-        Runnable playerRunnable = new PlayerRunnable(mp3Player);
-        Thread playerThread = new Thread(playerRunnable);
-        playerThread.start();
+        if (mp3Player == null) {
+            // Create the mp3player
+            mp3Player = new MP3Player(filesArray);
+
+            // Start a new thread which will play the music
+            Runnable playerRunnable = new PlayerRunnable(mp3Player);
+            Thread playerThread = new Thread(playerRunnable);
+            playerThread.start();
+        } else {
+            mp3Player.setPlaylist(filesArray);
+        }
     }
 
     /**
@@ -151,16 +188,10 @@ public class MediaplayerService {
     public void toggleShuffle() {
         if (isShuffled) {
             // Is currently shuffled; reset
-            trackList = originalTrackList;
+            toggleShuffleOff();
         } else {
             // Not currently shuffled; shuffle
-
-            // Convert Set to List
-            List<Track> trackListList = new ArrayList<>(trackList);
-            // Shuffle List
-            Collections.shuffle(trackListList);
-            // Convert List back to Set
-            trackList = new LinkedHashSet<>(trackListList);
+            toggleShuffleOn();
         }
 
         isShuffled = !isShuffled;
@@ -168,11 +199,28 @@ public class MediaplayerService {
         playTrackList();
     }
 
+<<<<<<< Updated upstream
     /**
      * Sets the volume of the mp3Player
      *
      * @param volume specified volume
      */
+=======
+    private void toggleShuffleOn() {
+        // Convert Set to List
+        List<Track> trackListList = new ArrayList<>(trackList);
+        // Shuffle List
+        Collections.shuffle(trackListList);
+        // Convert List back to Set
+        trackList = new LinkedHashSet<>(trackListList);
+    }
+
+    private void toggleShuffleOff() {
+        trackList = originalTrackList;
+    }
+
+    // Sets the volume of the mp3Player
+>>>>>>> Stashed changes
     public void setVolume(int volume) {
         mp3Player.setVolume(volume);
     }
@@ -225,6 +273,9 @@ public class MediaplayerService {
     }
 
     public boolean isStopped() {
+        if (mp3Player == null) {
+            return true;
+        }
         return mp3Player.isStopped();
     }
 
