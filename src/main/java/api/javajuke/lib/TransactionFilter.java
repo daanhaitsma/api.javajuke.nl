@@ -76,7 +76,8 @@ public class TransactionFilter implements Filter {
             PrintWriter out = ((HttpServletResponse) response).getWriter();
             ((HttpServletResponse) response).setContentType("application/json");
             ((HttpServletResponse) response).setCharacterEncoding("UTF-8");
-            out.print(apiError);
+            out.write(apiError.toString());
+
             out.flush();
             return;
         }
