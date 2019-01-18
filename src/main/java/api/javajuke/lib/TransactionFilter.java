@@ -76,12 +76,9 @@ public class TransactionFilter implements Filter {
             String json = new Gson().toJson(apiError);
 
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            PrintWriter out = response.getWriter();
             response.setContentType("application/json");
-            out.print(json);
-            out.flush();
-
-            return;
+            response.getWriter().write(json);
+            response.getWriter().flush();
         }
 
         // Return the request response
