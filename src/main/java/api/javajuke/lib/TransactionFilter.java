@@ -78,7 +78,6 @@ public class TransactionFilter implements Filter {
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             PrintWriter out = response.getWriter();
             response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             out.print(json);
             out.flush();
 
