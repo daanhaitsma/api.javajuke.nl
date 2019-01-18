@@ -2,6 +2,7 @@ package api.javajuke.lib;
 
 import api.javajuke.data.UserRepository;
 import api.javajuke.exception.ApiError;
+import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,15 +71,17 @@ public class TransactionFilter implements Filter {
 
         // If the user is not found it will return a 401 Unauthorized response
         if(!userRepository.findByToken(token).isPresent()) {
-            ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Forbidden", 400);
+            ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized", 401);
+
+            String json = new Gson().toJson(apiError);
 
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            PrintWriter out = ((HttpServletResponse) response).getWriter();
-            ((HttpServletResponse) response).setContentType("application/json");
-            ((HttpServletResponse) response).setCharacterEncoding("UTF-8");
-            out.write(apiError.toString());
-
+            PrintWriter out = response.getWriter();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            out.print(json);
             out.flush();
+
             return;
         }
 
