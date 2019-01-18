@@ -178,7 +178,7 @@ public class TrackService {
 
                     albumCover.write(imageData);
 
-                    File albumCoverFile = new File(albumCoverPath + ".mp3");
+                    File albumCoverFile = new File(albumCoverPath + imageExtension);
                     albumCoverFile.setExecutable(true);
                     albumCoverFile.setReadable(true);
                     albumCoverFile.setWritable(true);
