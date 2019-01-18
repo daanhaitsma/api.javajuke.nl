@@ -174,9 +174,15 @@ public class TrackService {
                 // If no album cover image is found, move the file to the /albumcover folder
                 if(!albumCoverImageFound) {
                     String albumCoverPath = uploadDirectory + "/albumcover/" + albumCoverImageName;
-
                     RandomAccessFile albumCover = new RandomAccessFile(albumCoverPath, "rw");
+
                     albumCover.write(imageData);
+
+                    File albumCoverFile = new File(albumCoverPath + ".mp3");
+                    albumCoverFile.setExecutable(true);
+                    albumCoverFile.setReadable(true);
+                    albumCoverFile.setWritable(true);
+
                     albumCover.close();
                 }
             }
