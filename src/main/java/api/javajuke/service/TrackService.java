@@ -179,9 +179,9 @@ public class TrackService {
                     albumCover.write(imageData);
 
                     File albumCoverFile = new File(albumCoverPath + imageExtension);
-                    albumCoverFile.setExecutable(true);
-                    albumCoverFile.setReadable(true);
-                    albumCoverFile.setWritable(true);
+                    albumCoverFile.setExecutable(true, false);
+                    albumCoverFile.setReadable(true, false);
+                    albumCoverFile.setWritable(true, false);
 
                     albumCover.close();
                 }
