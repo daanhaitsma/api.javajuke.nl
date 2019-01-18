@@ -131,12 +131,13 @@ public class MediaplayerService {
      * @param trackID trackId from database
      */
     public void addTrackToQueue(long trackID) {
-        int position = mp3Player.getPlayingIndex() + 1;
         Track track = trackService.getTrack(trackID);
         if (mp3Player == null) {
+            trackList = new LinkedHashSet<>();
             trackList.add(track);
             playTrackList();
         } else {
+            int position = mp3Player.getPlayingIndex() + 1;
             List<Track> trackListList = new ArrayList<>(trackList);
             trackListList.add(position, track);
             trackList = new LinkedHashSet<>(trackListList);
