@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-public class MediaplayerController {
+public class MediaplayerController implements VersionController {
     private final MediaplayerService mediaplayerService;
 
     @Autowired
