@@ -22,7 +22,7 @@ public class PlaylistFunctionalTest extends FunctionalTest {
                 .param("password", "playlist")
                 .post("/register")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class PlaylistFunctionalTest extends FunctionalTest {
                 .param("name", "Test Playlist")
                 .post("/playlists")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .path("id").toString();
     }

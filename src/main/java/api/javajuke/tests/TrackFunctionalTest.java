@@ -39,7 +39,7 @@ public class TrackFunctionalTest extends FunctionalTest {
                 .param("password", "track")
                 .post("/register")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void eTestUploadTrack() throws IOException {
-        File file = new ClassPathResource("testsound.mp3").getFile();
+        File file = new ClassPathResource("5 - Three Days Grace - Nothing To Lose But You.mp3").getFile();
 
         given()
                 .header("X-Authorization", token)
@@ -82,7 +82,7 @@ public class TrackFunctionalTest extends FunctionalTest {
                 .multiPart("files", file)
                 .post("/tracks")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class TrackFunctionalTest extends FunctionalTest {
             JSONObject value = values.getJSONObject(i);
             String name = value.getString("title");
 
-            if(name.equals("Niels")) {
+            if(name.equals("Nothing To Lose But You")) {
                 trackId = value.getInt("id");
             }
         }
