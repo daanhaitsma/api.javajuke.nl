@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface TrackRepository extends JpaRepository<Track, Long> {
     Optional<Track> findByTitleAndArtist(String name, String artist);
-    List<Track> findAllByArtistContainingOrTitleContainingOrAlbumContaining(String artist, String title, String album);
+    List<Track> findAllByArtistContainingOrTitleContaining(String artist, String title);
+    List<Track> findAllByArtistContainingOrTitleContainingOrAlbumNameContaining(String artist, String title, String album);
     List<Track> findByAlbum_Id(long albumId);
 }

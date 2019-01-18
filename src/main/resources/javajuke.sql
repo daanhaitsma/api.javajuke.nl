@@ -49,10 +49,10 @@ CREATE TABLE `Playlist` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `Playlist_Track`
+-- Tabelstructuur voor tabel `playlist_track`
 --
 
-CREATE TABLE `Playlist_Track` (
+CREATE TABLE `playlist_track` (
   `playlist_id` int(11) NOT NULL,
   `track_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -103,9 +103,9 @@ ALTER TABLE `Playlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `Playlist_Track`
+-- Indexen voor tabel `playlist_track`
 --
-ALTER TABLE `Playlist_Track`
+ALTER TABLE `playlist_track`
   ADD PRIMARY KEY (`playlist_id`,`track_id`),
   ADD KEY `IDX_75FFE1E56BBD148` (`playlist_id`),
   ADD KEY `IDX_75FFE1E55ED23C43` (`track_id`);
@@ -156,9 +156,9 @@ ALTER TABLE `User`
 --
 
 --
--- Beperkingen voor tabel `Playlist_Track`
+-- Beperkingen voor tabel `playlist_track`
 --
-ALTER TABLE `Playlist_Track`
+ALTER TABLE `playlist_track`
   ADD CONSTRAINT `FK_75FFE1E55ED23C43` FOREIGN KEY (`track_id`) REFERENCES `Track` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_75FFE1E56BBD148` FOREIGN KEY (`playlist_id`) REFERENCES `Playlist` (`id`) ON DELETE CASCADE;
 

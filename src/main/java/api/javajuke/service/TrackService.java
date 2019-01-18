@@ -7,6 +7,7 @@ import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +61,7 @@ public class TrackService {
      */
     public List<Track> getTracks(Optional<String> search){
         String searchInput = search.get();
-        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumContaining(searchInput, searchInput, searchInput);
+        return trackRepository.findAllByArtistContainingOrTitleContainingOrAlbumNameContaining(searchInput, searchInput, searchInput);
     }
 
     /**
@@ -123,7 +124,6 @@ public class TrackService {
             }
 
             if(trackRepository.findByTitleAndArtist(title, artist).isPresent()) {
-                destination.delete();
                 throw new BadRequestException("Song already in library");
             }
 
@@ -184,6 +184,8 @@ public class TrackService {
             track.setArtist(artist);
             track.setTitle(title);
             track.setAlbum(albumObject);
+        } else {
+            throw new BadRequestException("No metadata available");
         }
 
         return trackRepository.save(track);
