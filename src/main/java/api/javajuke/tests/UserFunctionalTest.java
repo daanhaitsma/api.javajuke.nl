@@ -19,7 +19,7 @@ public class UserFunctionalTest extends FunctionalTest{
                 .param("password", "playlist")
                 .post("/register")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
