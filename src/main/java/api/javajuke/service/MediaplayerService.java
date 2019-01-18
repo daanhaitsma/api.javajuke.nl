@@ -200,13 +200,6 @@ public class MediaplayerService {
         playTrackList();
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Sets the volume of the mp3Player
-     *
-     * @param volume specified volume
-     */
-=======
     private void toggleShuffleOn() {
         // Convert Set to List
         List<Track> trackListList = new ArrayList<>(trackList);
@@ -220,8 +213,11 @@ public class MediaplayerService {
         trackList = originalTrackList;
     }
 
-    // Sets the volume of the mp3Player
->>>>>>> Stashed changes
+    /**
+     * Sets the volume of the mp3Player
+     *
+     * @param volume specified volume
+     */
     public void setVolume(int volume) {
         mp3Player.setVolume(volume);
     }
