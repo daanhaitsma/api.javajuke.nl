@@ -57,10 +57,10 @@ public class PlaylistController implements VersionController{
      * @return the newly created playlist as a json response
      */
     @PostMapping(value = "/playlists", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Playlist create(@RequestParam Map<String, String> body, @RequestHeader(value = "X-Authorization") String token) {
+    public ResponseEntity create(@RequestParam Map<String, String> body, @RequestHeader(value = "X-Authorization") String token) {
         String name = body.get("name");
 
-        return playlistService.createPlaylist(name, token);
+        return new ResponseEntity<>(playlistService.createPlaylist(name, token), HttpStatus.CREATED);
     }
 
     /**
@@ -111,8 +111,8 @@ public class PlaylistController implements VersionController{
      * @return the updated playlist as a json response
      */
     @PostMapping(value = "/playlists/{id}/tracks/{trackId}")
-    public Playlist addTrackToPlaylist(@PathVariable long id, @PathVariable long trackId) {
-        return playlistService.addTrackToPlaylist(id, trackId);
+    public ResponseEntity addTrackToPlaylist(@PathVariable long id, @PathVariable long trackId) {
+        return new ResponseEntity<>(playlistService.addTrackToPlaylist(id, trackId), HttpStatus.CREATED);
     }
 
     /**

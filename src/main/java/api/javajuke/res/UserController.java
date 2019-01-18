@@ -5,7 +5,9 @@ import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,12 +50,12 @@ public class UserController implements VersionController {
      * @throws EntityNotFoundException when the user already exists
      */
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public User register(@RequestBody MultiValueMap<String, String> body) throws EntityNotFoundException {
+    public ResponseEntity register(@RequestBody MultiValueMap<String, String> body) throws EntityNotFoundException {
         String email = body.getFirst("email");
         String username = body.getFirst("username");
         String password = body.getFirst("password");
 
-        return userService.createUser(email, username, password);
+        return new ResponseEntity<>(userService.createUser(email, username, password), HttpStatus.CREATED);
     }
 
     /**

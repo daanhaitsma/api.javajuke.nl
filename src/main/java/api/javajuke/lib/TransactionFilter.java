@@ -1,6 +1,9 @@
 package api.javajuke.lib;
 
 import api.javajuke.data.UserRepository;
+import api.javajuke.exception.ApiError;
+import com.google.gson.Gson;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.WebApplicationContext;
@@ -11,6 +14,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,8 +71,16 @@ public class TransactionFilter implements Filter {
 
         // If the user is not found it will return a 401 Unauthorized response
         if(!userRepository.findByToken(token).isPresent()) {
-            ((HttpServletResponse) response)
-                    .setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized", 401);
+
+            String json = new Gson().toJson(apiError);
+
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            PrintWriter out = response.getWriter();
+            response.setContentType("application/json");
+            out.print(json);
+            out.flush();
+
             return;
         }
 
