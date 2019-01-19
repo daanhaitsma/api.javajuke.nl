@@ -22,6 +22,7 @@ public class MediaplayerService {
     private Set<Track> trackList;
     private Set<Track> originalTrackList;
     private boolean isShuffled = false;
+    private int volume = 50;
 
     @Autowired
     public MediaplayerService(TrackService trackService)
@@ -40,7 +41,7 @@ public class MediaplayerService {
         if (isStopped()) {
             return new PlayerState(
                     0,
-                    50,
+                    this.volume,
                     false,
                     true,
                     false,
@@ -131,17 +132,13 @@ public class MediaplayerService {
 
         File[] filesArray = files.toArray(new File[files.size()]);
 
-        if (mp3Player == null) {
-            // Create the mp3player
-            mp3Player = new MP3Player(filesArray);
-
-            // Start a new thread which will play the music
-            Runnable playerRunnable = new PlayerRunnable(mp3Player);
-            Thread playerThread = new Thread(playerRunnable);
-            playerThread.start();
-        } else {
-            mp3Player.setPlaylist(filesArray);
-        }
+        // Create the mp3player
+        mp3Player = new MP3Player(filesArray);
+        setVolume(volume);
+        // Start a new thread which will play the music
+        Runnable playerRunnable = new PlayerRunnable(mp3Player);
+        Thread playerThread = new Thread(playerRunnable);
+        playerThread.start();
     }
 
     /**
@@ -216,10 +213,11 @@ public class MediaplayerService {
     /**
      * Sets the volume of the mp3Player
      *
-     * @param volume specified volume
+     * @param newVolume specified volume
      */
-    public void setVolume(int volume) {
-        mp3Player.setVolume(volume);
+    public void setVolume(int newVolume) {
+        this.volume = newVolume;
+        mp3Player.setVolume(this.volume);
     }
 
     /**
