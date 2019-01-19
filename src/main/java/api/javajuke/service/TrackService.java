@@ -7,21 +7,21 @@ import api.javajuke.data.model.Track;
 import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 import com.mpatric.mp3agic.*;
-
-import javax.imageio.ImageIO;
 
 @Service
 public class TrackService {
@@ -164,6 +164,7 @@ public class TrackService {
 
                 // Look in the folder for the album cover image
                 boolean albumCoverImageFound = false;
+
                 for (File fileLoop : listOfAlbumCovers) {
                     if (fileLoop.isFile() && fileLoop.getName().equals(albumCoverImageName)) {
                         System.out.println(fileLoop.getName() + " already exists, not adding this image");
@@ -175,15 +176,12 @@ public class TrackService {
                 if(!albumCoverImageFound) {
                     String albumCoverPath = uploadDirectory + "/albumcover/" + albumCoverImageName;
                     RandomAccessFile albumCover = new RandomAccessFile(albumCoverPath, "rw");
-
                     albumCover.write(imageData);
-
-                    File albumCoverFile = new File(albumCoverPath + imageExtension);
-                    albumCoverFile.setExecutable(true, false);
-                    albumCoverFile.setReadable(true, false);
-                    albumCoverFile.setWritable(true, false);
-
                     albumCover.close();
+
+                    // Make the file readable by anyone
+                    Set<PosixFilePermission> ownerWritable = PosixFilePermissions.fromString("rw-r--r--");
+                    Files.setPosixFilePermissions(Paths.get(albumCoverPath), ownerWritable);
                 }
             }
 
