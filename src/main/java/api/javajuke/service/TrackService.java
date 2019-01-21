@@ -260,24 +260,25 @@ public class TrackService {
             throw new FileNotFoundException("File could not be deleted");
         }
 
-        Long albumId = track.getAlbum().getId();
+        if(track.getAlbum() != null) {
+            Long albumId = track.getAlbum().getId();
 
-        trackRepository.delete(track);
+            trackRepository.delete(track);
 
-        // If all tracks of a certain album are deleted, remove them from the album table as well.
-        if(trackRepository.findByAlbum_Id(albumId).size() == 0) {
-            System.out.println("ALBUM ID IS: " + albumId);
-            Album album = albumRepository.findById(albumId)
-                    .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
-            String albumPath = uploadDirectory + "albumcover/" + album.getCoverPath();
+            // If all tracks of a certain album are deleted, remove them from the album table as well.
+            if (trackRepository.findByAlbum_Id(albumId).size() == 0) {
+                System.out.println("ALBUM ID IS: " + albumId);
+                Album album = albumRepository.findById(albumId)
+                        .orElseThrow(() -> new EntityNotFoundException("Something went wrong, please try again later."));
+                String albumPath = uploadDirectory + "albumcover/" + album.getCoverPath();
 
-            // Delete the album cover image
-            File destination = new File(albumPath);
-            destination.delete();
+                // Delete the album cover image
+                File destination = new File(albumPath);
+                destination.delete();
 
-            albumRepository.deleteById(albumId);
+                albumRepository.deleteById(albumId);
+            }
         }
-
     }
 
     private File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
