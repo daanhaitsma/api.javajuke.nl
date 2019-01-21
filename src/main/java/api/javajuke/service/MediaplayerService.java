@@ -58,7 +58,7 @@ public class MediaplayerService {
                     mp3Player.isPlaying(),
                     mp3Player.isPaused(),
                     getCurrentTrack(),
-                    trackList);
+                    getQueue());
         }
     }
 
@@ -208,6 +208,12 @@ public class MediaplayerService {
 
     private void toggleShuffleOff() {
         trackList = originalTrackList;
+    }
+
+    public Set<Track> getQueue() {
+        List<Track> trackListList = new ArrayList<>(trackList);
+        trackListList = trackListList.subList(mp3Player.getPlayingIndex(), trackList.size());
+        return new LinkedHashSet<>(trackListList);
     }
 
     /**
