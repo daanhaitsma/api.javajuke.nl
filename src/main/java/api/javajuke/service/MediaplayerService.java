@@ -5,16 +5,13 @@ import api.javajuke.data.model.Playlist;
 import api.javajuke.data.model.Track;
 import jaco.mp3.player.MP3Player;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.util.*;
 
 @Service
 public class MediaplayerService {
-
-    @Autowired
-    private Environment env;
 
     private final TrackService trackService;
 
@@ -24,6 +21,11 @@ public class MediaplayerService {
     private boolean isShuffled = false;
     private int volume = 50;
 
+    /**
+     * Constructor for the MediaplayerService class.
+     *
+     * @param trackService
+     */
     @Autowired
     public MediaplayerService(TrackService trackService)
     {
@@ -98,6 +100,7 @@ public class MediaplayerService {
 
     /**
      * Collects all the tracks for the playList and plays them
+     *
      * @param playlist with all tracks
      */
     public void playPlaylist(Playlist playlist) {
