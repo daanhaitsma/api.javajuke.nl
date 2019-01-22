@@ -26,13 +26,12 @@ public class UserService {
      * Logs in a user with the specified email or username and password. First finds a user
      * with the email or username and then checks if the password matches.
      *
-     * @param email    the users email
      * @param username the users username
      * @param password the users password
      * @return the logged in users token
      */
-    public User loginUser(String email, String username, String password) {
-        User user = userRepository.findByUsernameOrEmail(username, email)
+    public User loginUser(String username, String password) {
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new EntityNotFoundException("Login credentials are incorrect."));
 
         if (BCrypt.checkpw(password, user.getPassword())) {
@@ -52,6 +51,9 @@ public class UserService {
      * @return the newly created user
      */
     public User createUser(String email, String username, String password) {
+        if(password.length() < 8) {
+            throw new IllegalArgumentException("Password too short");
+        }
         if (!userRepository.findByUsernameOrEmail(username, email).isPresent()) {
             User newUser = new User(email, username, password);
 
