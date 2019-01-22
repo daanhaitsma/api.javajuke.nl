@@ -1,7 +1,6 @@
 package api.javajuke.res;
 
 import api.javajuke.data.model.User;
-import api.javajuke.exception.BadRequestException;
 import api.javajuke.exception.EntityNotFoundException;
 import api.javajuke.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
