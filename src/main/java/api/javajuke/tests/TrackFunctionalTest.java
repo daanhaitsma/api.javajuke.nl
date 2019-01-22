@@ -22,13 +22,12 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     private static String token;
     private static int trackId;
-    private static String info;
-    List<Entity> list = new ArrayList<>();
 
     @Test
     public void aTestRegister() {
+        // Try registering with given username and password,
+        // when statuscode equals 201 the process is executed succesful
         given()
-                .param("email", "track@track.nl")
                 .param("username", "track")
                 .param("password", "track")
                 .post("/register")
@@ -38,6 +37,8 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void bTestLogin(){
+        // Try login with the given username and password
+        // When statuscode equals 200 the process is executed sucesful
         given()
                 .param("email", "track@track.nl")
                 .param("username", "track")
@@ -49,6 +50,7 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void cTestGetLoginToken() {
+        // Try to obtain the login token of the logged in account
         token = given()
                 .param("email", "track@track.nl")
                 .param("username", "track")
@@ -59,6 +61,8 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void dTestGetTracks() {
+        // Try to get all tracks, when statuscode equals 200
+        // the process is executed succesful
         given()
                 .header("X-Authorization", token)
                 .get("/tracks")
@@ -68,6 +72,10 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void eTestUploadTrack() throws IOException {
+        // Try to upload a track, when statuscode equals 201
+        // the process is executed succesful
+
+        // Get track from resource path
         File file = new ClassPathResource("5 - Three Days Grace - Nothing To Lose But You.mp3").getFile();
 
         given()
@@ -81,15 +89,17 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void fgetTrackNameForTesting() {
-
+        // Obtain the trackname and id for the following tests.
         Response response = given()
                 .header("X-Authorization", token)
                 .when()
                 .get("/tracks");
 
+        // Extract JSON response by key data
         JSONObject JSONResponseBody = new JSONObject(response.body().asString());
         JSONArray values = JSONResponseBody.getJSONArray("data");
 
+        // Obtain the id by trackname
         for (int i = 0; i < values.length(); i++) {
 
             JSONObject value = values.getJSONObject(i);
@@ -103,6 +113,8 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void gTestGetTrack() {
+        // Try to get a track, when statuscode equals 200
+        // the process is executed succesful
         given()
                 .header("X-Authorization", token)
                 .get("/tracks/" + trackId)
@@ -113,6 +125,8 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void hTestDeleteTrack() {
+        // Try to delete a track, when statuscode equals 200
+        // the process is executed succesfull
         given()
                 .header("X-Authorization", token)
                 .delete("/tracks/" + trackId)
@@ -122,6 +136,8 @@ public class TrackFunctionalTest extends FunctionalTest {
 
     @Test
     public void iTestDeleteUser() {
+        // Try to delete the created user, when statuscode equals 200
+        // the process is executed succesful
         given()
                 .header("X-Authorization", token)
                 .delete("/users")

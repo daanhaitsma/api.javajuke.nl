@@ -24,11 +24,13 @@ public class TrackServiceUnitTest {
 
     @Test
     public void testGetTrack() {
+        // Create a dummy track
         Track dummyTrack = new Track("/example/path");
+        // Return a stub when findById is called
         when(trackRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(dummyTrack));
-
+        // Try to obtain the track
         Track track = trackService.getTrack(1);
-
+        // Check if the path of the track equals "/example/path"
         Assert.assertEquals(track.getPath(), "/example/path");
     }
 }

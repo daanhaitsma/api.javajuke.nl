@@ -47,48 +47,64 @@ public class MediaplayerServiceUnitTest {
 
     @Test
     public void testPlayPlaylist() {
+        // Compare the getTrackList method results to all manually added tracks
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
+        // Compare the path of the current track to the path of the first playing track
         Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackStartup.getPath());
     }
 
     @Test
     public void testSetVolume() {
+        // Set volume to 50 and compare this with the getVolume() method
         mediaplayerService.setVolume(50);
         Assert.assertEquals(mediaplayerService.getVolume(), 50);
 
+        // Set volume to 40 and compare this with the getVolume() method
         mediaplayerService.setVolume(40);
         Assert.assertEquals(mediaplayerService.getVolume(), 40);
 
+        // Set volume to 0 and compare this with the getVolume() method
         mediaplayerService.setVolume(0);
         Assert.assertEquals(mediaplayerService.getVolume(), 0);
     }
 
     @Test
     public void testSetVolumeVolumeCannotBeMoreThanHundred() {
+        // Set volume to 50
         mediaplayerService.setVolume(50);
 
+        // Try to set volume to 101(not possible)
         assertThatThrownBy(() -> {
             mediaplayerService.setVolume(101);
         }).isOfAnyClassIn(IllegalArgumentException.class);
+
+        // Check if volume is still 50
         Assert.assertEquals(mediaplayerService.getVolume(), 50);
     }
 
     @Test
     public void testSetVolumeVolumeCannotBeNegative() {
+        // Set volume to 50
         mediaplayerService.setVolume(50);
 
+        //Try to set volume to -1(not possible)
         assertThatThrownBy(() -> {
             mediaplayerService.setVolume(-1);
         }).isOfAnyClassIn(IllegalArgumentException.class);
+
+        // Check if volume is still 50
         Assert.assertEquals(mediaplayerService.getVolume(), 50);
     }
 
     @Test
     public void testToggleRepeat() {
+        // Check if repeat option is enabled
         Assert.assertEquals(mediaplayerService.isRepeated(), true);
 
+        // Toggle repeat option
         mediaplayerService.toggleRepeat();
 
+        // Check if repeat is disabled
         Assert.assertEquals(mediaplayerService.isRepeated(), false);
     }
 

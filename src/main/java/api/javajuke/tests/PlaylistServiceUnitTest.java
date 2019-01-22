@@ -25,11 +25,13 @@ public class PlaylistServiceUnitTest {
 
     @Test
     public void testGetPlaylist() {
+        // Create a dummy playlist
         Playlist dummyPlaylist = new Playlist("Playlist 1", new User());
+        // Return a stub when findById is called
         when(playlistRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(dummyPlaylist));
-
+        // Try to obtain the playlist
         Playlist playlist = playlistService.getPlaylist(1);
-
+        // Check if the name of the playlist equals "Playlist 1"
         Assert.assertEquals(playlist.getName(), "Playlist 1");
     }
 
