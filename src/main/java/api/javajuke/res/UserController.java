@@ -27,18 +27,17 @@ public class UserController implements VersionController {
     }
 
     /**
-     * Creates an API endpoint to create login with the specified email or username and password.
+     * Creates an API endpoint to create login with the specified username and password.
      *
      * @param body the body containing the POST data with which the user can be logged in
      * @return the token for the logged in user
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public User login(@RequestBody MultiValueMap<String, String> body){
-        String email = body.getFirst("email");
         String username = body.getFirst("username");
         String password = body.getFirst("password");
 
-        return userService.loginUser(email, username, password);
+        return userService.loginUser(username, password);
     }
 
     /**
