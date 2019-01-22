@@ -12,7 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class MediaplayerServiceUnitTest {
@@ -23,12 +25,12 @@ public class MediaplayerServiceUnitTest {
     private Track trackStartup, trackMiddleup, trackEndup;
 
     private Playlist dummyPlaylist;
-    private HashSet<Track> tracks;
+    private List<Track> tracks;
 
     @BeforeEach
     public void setup() throws IOException {
         dummyPlaylist = new Playlist();
-        tracks = new HashSet<>();
+        tracks = new ArrayList<>();
 
         // Create dummy tracks
         trackStartup = new Track(new ClassPathResource("startup.mp3").getURL().getPath());
@@ -109,7 +111,7 @@ public class MediaplayerServiceUnitTest {
 
         // Assert
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
-        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackStartup.getPath());
+        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackMiddleup.getPath());
     }
 
     @Test
@@ -119,6 +121,6 @@ public class MediaplayerServiceUnitTest {
 
         // Assert
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
-        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackMiddleup.getPath());
+        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackEndup.getPath());
     }
 }

@@ -16,8 +16,8 @@ public class MediaplayerService {
     private final TrackService trackService;
 
     private MP3Player mp3Player;
-    private Set<Track> trackList;
-    private Set<Track> originalTrackList;
+    private List<Track> trackList;
+    private List<Track> originalTrackList;
     private boolean isShuffled = false;
     private int volume = 50;
 
@@ -170,14 +170,14 @@ public class MediaplayerService {
     public void addTrackToQueue(long trackID) {
         Track track = trackService.getTrack(trackID);
         if (mp3Player == null) {
-            trackList = new LinkedHashSet<>();
+            trackList = new ArrayList<>();
             trackList.add(track);
             playTrackList();
         } else {
             int position = mp3Player.getPlayingIndex() + 1;
             List<Track> trackListList = new ArrayList<>(trackList);
             trackListList.add(position, track);
-            trackList = new LinkedHashSet<>(trackListList);
+            trackList = new ArrayList<>(trackListList);
 
             mp3Player.addAtIndex(position, track.getFile());
         }
@@ -206,17 +206,17 @@ public class MediaplayerService {
         // Shuffle List
         Collections.shuffle(trackListList);
         // Convert List back to Set
-        trackList = new LinkedHashSet<>(trackListList);
+        trackList = new ArrayList<>(trackListList);
     }
 
     private void toggleShuffleOff() {
         trackList = originalTrackList;
     }
 
-    public Set<Track> getQueue() {
+    public List<Track> getQueue() {
         List<Track> trackListList = new ArrayList<>(trackList);
         trackListList = trackListList.subList(mp3Player.getPlayingIndex(), trackList.size());
-        return new LinkedHashSet<>(trackListList);
+        return new ArrayList<>(trackListList);
     }
 
     /**
@@ -259,7 +259,7 @@ public class MediaplayerService {
      *
      * @return tracklist
      */
-    public Set<Track> getTrackList() {
+    public List<Track> getTrackList() {
         return trackList;
     }
 
