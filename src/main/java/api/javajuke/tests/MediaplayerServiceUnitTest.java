@@ -112,6 +112,7 @@ public class MediaplayerServiceUnitTest {
     public void testNextSong() throws Exception{
         // Act
         mediaplayerService.nextSong();
+        //Use sleep to give the thread enough time to load otherwise the test will fail (Threading issue)
         sleep(1000);
         // Assert
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
@@ -122,6 +123,7 @@ public class MediaplayerServiceUnitTest {
     public void testPreviousSong() throws Exception{
         // Act
         mediaplayerService.previousSong();
+        //Use sleep to give the thread enough time to load otherwise the test will fail (Threading issue)
         sleep(1000);
         // Assert
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
