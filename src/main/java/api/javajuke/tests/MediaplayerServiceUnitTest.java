@@ -7,12 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
+
+import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class MediaplayerServiceUnitTest {
@@ -20,15 +24,17 @@ public class MediaplayerServiceUnitTest {
     @InjectMocks
     private MediaplayerService mediaplayerService;
 
+    @Mock
     private Track trackStartup, trackMiddleup, trackEndup;
 
     private Playlist dummyPlaylist;
-    private HashSet<Track> tracks;
+    private List<Track> tracks;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException{
         dummyPlaylist = new Playlist();
-        tracks = new HashSet<>();
+
+        tracks = new ArrayList<>();
 
         // Create dummy tracks
         trackStartup = new Track(new ClassPathResource("startup.mp3").getURL().getPath());
@@ -119,22 +125,24 @@ public class MediaplayerServiceUnitTest {
     }
 
     @Test
-    public void testNextSong(){
+    public void testNextSong() throws Exception{
         // Act
         mediaplayerService.nextSong();
-
-        // Assert
-        Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
-        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackStartup.getPath());
-    }
-
-    @Test
-    public void testPreviousSong(){
-        // Act
-        mediaplayerService.previousSong();
-
+        //Use sleep to give the thread enough time to load otherwise the test will fail (Threading issue)
+        sleep(1000);
         // Assert
         Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
         Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackMiddleup.getPath());
+    }
+
+    @Test
+    public void testPreviousSong() throws Exception{
+        // Act
+        mediaplayerService.previousSong();
+        //Use sleep to give the thread enough time to load otherwise the test will fail (Threading issue)
+        sleep(1000);
+        // Assert
+        Assert.assertEquals(mediaplayerService.getTrackList(), tracks);
+        Assert.assertEquals(mediaplayerService.getCurrentTrack().getPath(), trackEndup.getPath());
     }
 }

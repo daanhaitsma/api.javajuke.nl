@@ -9,8 +9,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,7 +33,7 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Set<Playlist> playlists = new HashSet<>();
+    private List<Playlist> playlists = new ArrayList<>();
 
     public User(){ }
 

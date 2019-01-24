@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,7 +34,7 @@ public class Playlist {
                 @JoinColumn(name = "track_id")
             })
     @OrderBy("id ASC")
-    private Set<Track> tracks = new HashSet<>();
+    private List<Track> tracks = new ArrayList<>();
 
     @JsonIgnoreProperties({"token", "email"})
     @ManyToOne
