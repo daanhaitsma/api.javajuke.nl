@@ -1,0 +1,9 @@
+juke.tracks.directory=uploads
+juke.scan.directory=
+juke.api.version=1
+
+spring.datasource.url=jdbc:mysql://localhost:3306/javajuke?useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+debug.song.path=C:/Users/Daan/Documents/__javajuke/mp3/elephant.mp3
