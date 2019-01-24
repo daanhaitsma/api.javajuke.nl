@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,5 +17,5 @@ public class PlayerState {
     private boolean playing;
     private boolean paused;
     private Track currentTrack;
-    private Set<Track> trackList;
+    private List<Track> trackList;
 }
