@@ -12,7 +12,7 @@ $ sudo apt-get install mysql-server mysql-client
 $ npm install -g polymer-cli
 ```
 
-The final required installation is a modified version of [JACo MP3 Player](http://jacomp3player.sourceforge.net/). The compiled jar of this version is included in the git repository. Place this file in the `jre/lib/ext` folder.
+The final required installation is a modified version of [JACo MP3 Player](http://jacomp3player.sourceforge.net/). The compiled jar of this version is available [here](https://github.com/daanhaitsma/javajuke-mp3-player/blob/master/lib/javajuke-mp3-player-0.1.2.jar). Place this file in the `jre/lib/ext` folder.
 * With jdk version 1.8.0_131 on Windows the complete path would be `C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\javajuke-mp3-player-0.1.2.jar`
 * With jdk version 1.8.0_131 on Raspbian Stretch Lite the complete path would be `/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/jre/lib/ext/javajuke-mp3-player-0.1.2.jar`
 
